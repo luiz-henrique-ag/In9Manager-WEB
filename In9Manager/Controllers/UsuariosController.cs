@@ -7,106 +7,98 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using In9Manager.Data;
 using In9Manager.Models;
-using In9Manager.Models.ViewModels;
-using In9Manager.Helpers.Session;
+using Microsoft.Extensions.Logging.Console;
+using In9Manager.Helpers.HashGenerator;
 
 namespace In9Manager.Controllers
 {
-    public class ClientesController : Controller
+    public class UsuariosController : Controller
     {
         private readonly ApplicationContext db;
-        private readonly ISessao _session;
 
-        public ClientesController(ApplicationContext context, ISessao session)
+        public UsuariosController(ApplicationContext context)
         {
             db = context;
-            _session = session;
         }
 
-        // GET: Clientes
+        // GET: Usuarios
         public async Task<IActionResult> Index()
         {
-            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
-            return View(await db.Cliente.ToListAsync());  
+            return db.Usuarios != null ?
+                        View(await db.Usuarios.ToListAsync()) :
+                        Problem("Entity set 'ApplicationContext.Usuarios'  is null.");
         }
 
-        // GET: Clientes/Details/5
+        // GET: Usuarios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
-            if (id == null || db.Cliente == null)
+            if (id == null || db.Usuarios == null)
             {
                 return NotFound();
             }
 
-            var cliente = await db.Cliente
+            var usuario = await db.Usuarios
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cliente == null)
+            if (usuario == null)
             {
                 return NotFound();
             }
 
-            return View(cliente);
+            return View(usuario);
         }
 
-        // GET: Clientes/Create
+        // GET: Usuarios/Create
         public IActionResult Create()
         {
-            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
-            ClienteViewModel model = new ClienteViewModel();
-            return View(model);
+            return View();
         }
 
-        // POST: Clientes/Create
+        // POST: Usuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ClienteViewModel model)
+        public async Task<IActionResult> Create(Usuario usuario, string confirmarSenha)
         {
-            Cliente cliente = model.Cliente;
-            ClienteEndereco endereco = model.ClienteEndereco;
+            if(usuario.Senha != confirmarSenha)
+            {
+                TempData["Erro"] = "Senhas devem ser iguais";
+                return View(usuario);
+            }
             if (ModelState.IsValid)
             {
-                db.Cliente.Add(cliente);
-                await db.SaveChangesAsync();
-                endereco.ClienteId = cliente.Id;
-                db.ClienteEndereco.Add(endereco);
+                usuario.Senha = usuario.Senha.GenerateHash();
+                db.Usuarios.Add(usuario);
                 await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                ModelState.AddModelError("", "Ocorreu um erro");
-            }
-            return View(model);
+            return View(usuario);
         }
 
-        // GET: Clientes/Edit/5
+        // GET: Usuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
-            if (id == null || db.Cliente == null)
+            if (id == null || db.Usuarios == null)
             {
                 return NotFound();
             }
 
-            var cliente = await db.Cliente.FindAsync(id);
-            if (cliente == null)
+            var usuario = await db.Usuarios.FindAsync(id);
+            if (usuario == null)
             {
                 return NotFound();
             }
-            return View(cliente);
+            return View(usuario);
         }
 
-        // POST: Clientes/Edit/5
+        // POST: Usuarios/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,CPF,Telefone,DataNascimento")] Cliente cliente)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Login,Cpf,Senha,Permissao")] Usuario usuario)
         {
-            if (id != cliente.Id)
+            if (id != usuario.Id)
             {
                 return NotFound();
             }
@@ -115,12 +107,12 @@ namespace In9Manager.Controllers
             {
                 try
                 {
-                    db.Update(cliente);
+                    db.Update(usuario);
                     await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClienteExists(cliente.Id))
+                    if (!UsuarioExists(usuario.Id))
                     {
                         return NotFound();
                     }
@@ -131,49 +123,49 @@ namespace In9Manager.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(cliente);
+            return View(usuario);
         }
 
-        // GET: Clientes/Delete/5
+        // GET: Usuarios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || db.Cliente == null)
+            if (id == null || db.Usuarios == null)
             {
                 return NotFound();
             }
 
-            var cliente = await db.Cliente
+            var usuario = await db.Usuarios
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cliente == null)
+            if (usuario == null)
             {
                 return NotFound();
             }
 
-            return View(cliente);
+            return View(usuario);
         }
 
-        // POST: Clientes/Delete/5
+        // POST: Usuarios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (db.Cliente == null)
+            if (db.Usuarios == null)
             {
-                return Problem("Entity set 'ApplicationContext.Cliente'  is null.");
+                return Problem("Entity set 'ApplicationContext.Usuarios'  is null.");
             }
-            var cliente = await db.Cliente.FindAsync(id);
-            if (cliente != null)
+            var usuario = await db.Usuarios.FindAsync(id);
+            if (usuario != null)
             {
-                db.Cliente.Remove(cliente);
+                db.Usuarios.Remove(usuario);
             }
-            
+
             await db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ClienteExists(int id)
+        private bool UsuarioExists(int id)
         {
-          return (db.Cliente?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (db.Usuarios?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

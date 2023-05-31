@@ -24,7 +24,7 @@ namespace In9Manager.Helpers.Session
             _httpContext.HttpContext.Session.Remove("UsuarioLogado");
         }
 
-        public void StartSession(Usuario usuario)
+        public void NewSession(Usuario usuario)
         {
             string model = JsonConvert.SerializeObject(usuario);
             _httpContext.HttpContext.Session.SetString("UsuarioLogado", model);

@@ -2,6 +2,10 @@
 
 namespace In9Manager.Models
 {
+    public enum Permissao 
+    { 
+        Administrador, Comum
+    }
     public class Usuario
     {
         public int Id { get; set; }

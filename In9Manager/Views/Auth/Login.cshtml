@@ -1,0 +1,43 @@
+﻿@model In9Manager.Models.ViewModels.UsuarioViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "";
+}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/In9Manager.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <h1 class="display-3 text-center">In9Manager</h1>
+    <h2 class="display-5 text-center mb-lg-5">Login</h2>
+    <div class="container">
+        <div class="row">
+            <form class="col-md-4 mx-auto" asp-action="SignIn">
+                <div class="mb-3">
+                    <label asp-for="Login" class="form-label">Login</label>
+                    <input asp-for="Login" name="login" type="text" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Senha" class="form-label">Senha</label>
+                    <input asp-for="Senha" type="password" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <span class="text-danger">@TempData["Erro"]</span>
+                </div>
+                <div class="mb-2">
+                    <input type="submit" value="Entrar" class="btn btn-primary w-100">
+                </div>
+                <div class="mb-2">
+                    <a href="">Esqueci a Senha</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
