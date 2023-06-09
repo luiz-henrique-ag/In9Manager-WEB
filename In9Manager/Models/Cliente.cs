@@ -3,6 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace In9Manager.Models
 {
+    public enum Sexo
+    {
+        M,F
+    }
     public class Cliente
     {
         public int Id { get; set; }

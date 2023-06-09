@@ -90,13 +90,17 @@ namespace In9Manager.Controllers
             {
                 return NotFound();
             }
-
-            var cliente = await db.Cliente.FindAsync(id);
-            if (cliente == null)
+            var model = new ClienteViewModel();
+            var cliente = await db.Cliente.FirstOrDefaultAsync(x => x.Id == id);
+            var endereco = await db.ClienteEndereco.Where(x => x.ClienteId == id).FirstOrDefaultAsync();
+            if (cliente == null || endereco == null)
             {
                 return NotFound();
             }
-            return View(cliente);
+            model.ClienteEndereco = endereco;
+            model.Cliente = cliente;
+
+            return View(model);
         }
 
         // POST: Clientes/Edit/5
@@ -104,9 +108,9 @@ namespace In9Manager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,CPF,Telefone,DataNascimento")] Cliente cliente)
+        public async Task<IActionResult> Edit(int id, ClienteViewModel model)
         {
-            if (id != cliente.Id)
+            if (id != model.Cliente.Id)
             {
                 return NotFound();
             }
@@ -115,12 +119,13 @@ namespace In9Manager.Controllers
             {
                 try
                 {
-                    db.Update(cliente);
+                    db.Cliente.Update(model.Cliente);
+                    db.ClienteEndereco.Update(model.ClienteEndereco);
                     await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClienteExists(cliente.Id))
+                    if (!ClienteExists(model.Cliente.Id) || !EnderecoExists(model.ClienteEndereco.Id))
                     {
                         return NotFound();
                     }
@@ -131,7 +136,7 @@ namespace In9Manager.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(cliente);
+            return View(model);
         }
 
         // GET: Clientes/Delete/5
@@ -173,7 +178,11 @@ namespace In9Manager.Controllers
 
         private bool ClienteExists(int id)
         {
-          return (db.Cliente?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (db.Cliente?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+        private bool EnderecoExists(int id)
+        {
+            return (db.ClienteEndereco?.Any(x => x.Id == id)).GetValueOrDefault();
         }
     }
 }

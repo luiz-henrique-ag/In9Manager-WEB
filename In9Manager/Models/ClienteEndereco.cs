@@ -17,29 +17,29 @@ namespace In9Manager.Models
 
         [Display(Name = "Tipo")]
         [StringLength(10)]
-        public string TipoLogradouro { get; set; }
+        public string TipoLogradouro { get; set; } = string.Empty;
 
         [StringLength(40, ErrorMessage = "Máximo 40 caracteres.")]
-        public string Logradouro { get; set; }
+        public string Logradouro { get; set; } = string.Empty;
 
         [Display(Name = "Número")]
-        public int NumeroLogradouro { get; set; }
+        public int NumeroLogradouro { get; set; } = 0;
 
         [StringLength(40, ErrorMessage = "Máximo 40 caracteres.")]
-        public string Bairro { get; set; }
+        public string Bairro { get; set; } = string.Empty;
 
         [StringLength(40, ErrorMessage = "Máximo 40 caracteres.")]
-        public string Complemento { get; set; }
+        public string Complemento { get; set; } = string.Empty;
 
         [StringLength(40, ErrorMessage = "Máximo 40 caracteres.")]
-        public string Cidade { get; set; }
+        public string Cidade { get; set; } = string.Empty;
 
         [StringLength(2)]
-        public string Estado { get; set; }
+        public string Estado { get; set; } = string.Empty;
 
         [Display(Name = "CEP")]
-        [StringLength(8)]
-        public string Cep { get; set; }
+        [StringLength(9)]
+        public string Cep { get; set; } = string.Empty;
 
         public int ClienteId { get; set; }
         public Cliente? Cliente { get; set; }

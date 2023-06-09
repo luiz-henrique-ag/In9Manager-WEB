@@ -27,7 +27,7 @@ namespace In9Manager.Controllers
         public IActionResult SignIn(UsuarioViewModel model)
         {
             var usuario = db.Usuarios.FirstOrDefault(m => m.Login == model.Login);
-            if(usuario == null || model.Senha.GenerateHash() == usuario.Senha)
+            if(usuario == null || model.Senha.GenerateHash() != usuario.Senha)
             {
                 TempData["Erro"] = "Usuário e/ou senha incorretos.";
             }

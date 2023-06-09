@@ -4,7 +4,7 @@
     ViewData["Title"] = "Cadastrar";
     SelectList tipos = new SelectList(Enum.GetValues(typeof(TipoLogradouro)));
     SelectList estados = new SelectList(Enum.GetValues(typeof(Estados)));
-    SelectList sexo = new SelectList("Sexo");
+    SelectList sexo = new SelectList(Enum.GetValues(typeof(Sexo)));
 }
 
 <h1>Cadastrar</h1>
@@ -25,13 +25,13 @@
                     </div>
                     <div class="mb-3">
                         <label asp-for="Cliente.CPF" class="control-label"></label>
-                        <input asp-for="Cliente.CPF" class="form-control" />
+                        <input asp-for="Cliente.CPF" class="form-control" id="cpf"/>
                         <span asp-validation-for="Cliente.CPF" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
                         <label asp-for="Cliente.Telefone" class="control-label"></label>
-                        <input asp-for="Cliente.Telefone" class="form-control" />
-                        <span asp-validation-for="Cliente.Telefone" class="text-danger"></span>
+                        <input asp-for="Cliente.Telefone" class="form-control" id="telefone" />
+                        <span asp-validation-for="Cliente.Telefone" class="text-danger" ></span>
                     </div>
                     <div class="row">
                         <div class="col-md-8">
@@ -44,7 +44,7 @@
                         <div class="col-md-4">
                             <div class="mb-3">
                                 <label asp-for="Cliente.Sexo" class="control-label"></label>
-                                <input asp-for="Cliente.Sexo" class="form-control" />
+                                <select asp-for="Cliente.Sexo" asp-items="sexo" class="form-select"></select>
                                 <span asp-validation-for="Cliente.Sexo" class="text-danger"></span>
                             </div>
                         </div>
@@ -100,7 +100,7 @@
                     </div>
                     <div class="mb-3">
                         <label asp-for="ClienteEndereco.Cep" class="control-label"></label>
-                        <input asp-for="ClienteEndereco.Cep" class="form-control" />
+                        <input asp-for="ClienteEndereco.Cep" class="form-control" id="cep"/>
                         <span asp-validation-for="ClienteEndereco.Cep" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
@@ -125,4 +125,25 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#cpf').inputmask({ 
+                mask: ['999.999.999-99'],
+                keepStatic: true
+            });
+        });
+        $(document).ready(function () {
+            $('#telefone').inputmask({
+                mask: ['(99)9999-9999', '(99)99999-9999'],
+                keepStatic: true
+            });
+        });
+        $(document).ready(function () {
+            $('#cep').inputmask({
+                mask: ['99999-999'],
+                keepStatic: true
+            });
+        });
+    </script>
 }
