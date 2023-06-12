@@ -48,7 +48,6 @@ namespace In9Manager.Controllers
         // GET: Veiculos/Create
         public IActionResult Create()
         {
-            ViewData["ClienteID"] = new SelectList(db.Cliente, "Id", "CPF");
             return View();
         }
 
@@ -57,15 +56,13 @@ namespace In9Manager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Modelo,Marca,Ano,Categoria,Placa,ClienteID")] Veiculo veiculo)
+        public async Task<IActionResult> Create(Veiculo veiculo, int ClienteId)
         {
             if (ModelState.IsValid)
             {
-                db.Add(veiculo);
-                await db.SaveChangesAsync();
+                db.Veiculos.Add(veiculo);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteID"] = new SelectList(db.Cliente, "Id", "CPF", veiculo.ClienteID);
             return View(veiculo);
         }
 

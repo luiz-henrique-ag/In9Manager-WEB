@@ -2,54 +2,35 @@
 @using Data
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components
+@using Radzen
+
 @inject ApplicationContext db
-
-@if(Clientes == null)
+<div class="col-md">
+<div class="mb-3">
+<RadzenDataGrid AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="4"
+                AllowSorting="true" Data="@Clientes" TItem="Cliente" ColumnWidth="200px" FilterMode="FilterMode.Simple"
+                SelectionMode="DataGridSelectionMode.Single" @bind-Value=@ClienteSelecionado >
+    <Columns>
+        <RadzenDataGridColumn TItem="Cliente" Property="Id" Filterable="false" Title="ID" Frozen="true" Width="20px" TextAlign="TextAlign.Center" />
+        <RadzenDataGridColumn TItem="Cliente" Property="Nome" Title="Nome" Frozen="true" Width="160px" />
+        <RadzenDataGridColumn TItem="Cliente" Property="CPF" Title="CPF" Width="160px" />
+    </Columns>
+</RadzenDataGrid>
+</div>
+@if (ClienteSelecionado?.Any() == true)
 {
-    <p>Carregando...</p>
+    <div class="mb-3">
+        <label class="form-label">Proprietário</label>
+        <input type="text" @bind="@ClienteSelecionado[0].Nome" class="form-control" disabled/>
+        <input type="hidden" name="ClienteId" @bind="@ClienteSelecionado[0].Id"/>
+    </div>
 }
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Nome
-                </th>
-                <th>
-                    CPF
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-    @foreach (var item in Clientes) {
-            <tr>
-                <td>
-                    @item.Nome
-                </td>
-                <td>
-                    @item.CPF
-                </td>
-                <td>
-                    <button class="btn btn-outline-dark" @onclick="( ()=> { clienteId = item.Id; InvokeAsync(StateHasChanged); })">Selecionar</button>
-                </td>
-            </tr>
-    }
-        </tbody>
-    </table>
-    <input @bind="clienteId" type="number" disabled/>
-}
-
+</div>
 @code {
     private IList<Cliente> Clientes { get; set; } = default!;
-    private int clienteId { get; set; } = 0;
+    private IList<Cliente> ClienteSelecionado;
     protected override async Task OnInitializedAsync()
     {
         Clientes = await db.Cliente.ToListAsync();
-    }
-    private void teste(int id)
-    {
-        clienteId = id;
     }
 }

@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <base href="~/" /> 
     <link rel="stylesheet" href="~/In9Manager.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/material-base.css">
 </head>
 <body>
     <header>
@@ -32,13 +33,15 @@
                             <a class="nav-link" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuários</a>
                         </li>
                     </ul>
-                    <span class="navbar-text">
-                        @if (session.GetSession() != null)
-                        {
-                            <a class="nav-link">@session.GetSession().Nome</a>
+                    @if (session.GetSession() != null)
+                    {
+                        <span class="navbar-text" style="margin-right: 10px;">
+                            @session.GetSession().Nome
+                        </span>
+                        <span class="navbar-text">
                             <a class="btn btn-danger">Logout</a>
-                        }
-                    </span>
+                        </span>
+                    }
                 </div>
             </div>
         </nav>
@@ -57,6 +60,7 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
