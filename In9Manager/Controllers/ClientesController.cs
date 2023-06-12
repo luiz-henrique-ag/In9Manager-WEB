@@ -26,33 +26,35 @@ namespace In9Manager.Controllers
         // GET: Clientes
         public async Task<IActionResult> Index()
         {
-            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            //if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             return View(await db.Cliente.ToListAsync());  
         }
 
         // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            //if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Cliente == null)
             {
                 return NotFound();
             }
-
+            var model = new ClienteViewModel();
+            var endereco = await db.ClienteEndereco.Where(x => x.ClienteId == id).FirstOrDefaultAsync();
             var cliente = await db.Cliente
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cliente == null)
+            if (cliente == null || endereco == null)
             {
                 return NotFound();
             }
-
-            return View(cliente);
+            model.Cliente = cliente;
+            model.ClienteEndereco = endereco;
+            return View(model);
         }
 
         // GET: Clientes/Create
         public IActionResult Create()
         {
-            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            //if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             ClienteViewModel model = new ClienteViewModel();
             return View(model);
         }
@@ -85,7 +87,7 @@ namespace In9Manager.Controllers
         // GET: Clientes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            //if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Cliente == null)
             {
                 return NotFound();
@@ -117,6 +119,7 @@ namespace In9Manager.Controllers
 
             if (ModelState.IsValid)
             {
+                model.ClienteEndereco.ClienteId = model.Cliente.Id;
                 try
                 {
                     db.Cliente.Update(model.Cliente);
@@ -142,19 +145,21 @@ namespace In9Manager.Controllers
         // GET: Clientes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || db.Cliente == null)
+            if (id == null || db.Cliente == null || db.ClienteEndereco == null)
             {
                 return NotFound();
             }
-
+            var model = new ClienteViewModel();
+            var endereco = await db.ClienteEndereco.Where(x => x.ClienteId == id).FirstOrDefaultAsync();
             var cliente = await db.Cliente
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cliente == null)
+            if (cliente == null || endereco == null)
             {
                 return NotFound();
             }
-
-            return View(cliente);
+            model.Cliente = cliente;
+            model.ClienteEndereco = endereco;
+            return View(model);
         }
 
         // POST: Clientes/Delete/5
@@ -167,9 +172,11 @@ namespace In9Manager.Controllers
                 return Problem("Entity set 'ApplicationContext.Cliente'  is null.");
             }
             var cliente = await db.Cliente.FindAsync(id);
-            if (cliente != null)
+            var endereco = await db.ClienteEndereco.FirstOrDefaultAsync(m => m.ClienteId == id);
+            if (cliente != null || endereco != null)
             {
                 db.Cliente.Remove(cliente);
+                db.ClienteEndereco.Remove(endereco);
             }
             
             await db.SaveChangesAsync();

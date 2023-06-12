@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace In9Manager.Models
 {
@@ -10,12 +9,15 @@ namespace In9Manager.Models
     public class Cliente
     {
         public int Id { get; set; }
+
         [Required]
         [StringLength(50)]
         public string Nome { get; set; }
+
         [Required]
         [StringLength(14)]
         public string CPF { get; set; }
+
         [Required]
         [StringLength(14)]
         public string Telefone { get; set; }
@@ -43,5 +45,7 @@ namespace In9Manager.Models
         }
 
         public DateTime DataCadastro { get; set; } = DateTime.UtcNow;
+        public ICollection<Veiculo>? Veiculos { get; set; }
     }
+
 }

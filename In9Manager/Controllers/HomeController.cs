@@ -1,4 +1,4 @@
-﻿using In9Manager.Models;
+﻿using In9Manager.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 

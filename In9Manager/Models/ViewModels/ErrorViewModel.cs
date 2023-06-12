@@ -1,4 +1,4 @@
-namespace In9Manager.Models
+namespace In9Manager.Models.ViewModels
 {
     public class ErrorViewModel
     {

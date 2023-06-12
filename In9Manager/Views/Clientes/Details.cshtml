@@ -1,42 +1,106 @@
-﻿@model In9Manager.Models.Cliente
+﻿@model In9Manager.Models.ViewModels.ClienteViewModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes";
 }
 
-<h1>Details</h1>
+<h1>Detalhes</h1>
 
 <div>
     <h4>Cliente</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CPF)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CPF)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Telefone)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Telefone)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DataNascimento)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DataNascimento)
-        </dd>
-    </dl>
+    <div class="row">
+        <div class="col">
+            <h5>Dados Pessoais</h5>
+            <dl class="row">
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.Cliente.Nome)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.Cliente.Nome)
+                </dd>
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.Cliente.CPF)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.Cliente.CPF)
+                </dd>
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.Cliente.Sexo)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.Cliente.Sexo)
+                </dd>
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.Cliente.Telefone)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.Cliente.Telefone)
+                </dd>
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.Cliente.Idade)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.Cliente.Idade)
+                </dd>
+                <dt class = "col-sm-2">
+                    @Html.DisplayNameFor(model => model.Cliente.DataNascimento)
+                </dt>
+                <dd class = "col-sm-10">
+                    @Html.DisplayFor(model => model.Cliente.DataNascimento)
+                </dd>
+            </dl>
+        </div>
+        <div class="col">
+            <h5>Dados de Endereço</h5>
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ClienteEndereco.TipoLogradouro)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ClienteEndereco.TipoLogradouro) &nbsp;
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ClienteEndereco.Logradouro)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ClienteEndereco.Logradouro) &nbsp;
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ClienteEndereco.NumeroLogradouro)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ClienteEndereco.NumeroLogradouro) &nbsp;
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ClienteEndereco.Bairro)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ClienteEndereco.Bairro) &nbsp;
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ClienteEndereco.Cep)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ClienteEndereco.Cep) &nbsp;
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ClienteEndereco.Cidade)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ClienteEndereco.Cidade) &nbsp;
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.ClienteEndereco.Complemento)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.ClienteEndereco.Complemento) &nbsp;
+                </dd>
+            </dl>
+        </div>
+    </div>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model.Cliente.Id">Alterar</a>
+    <a class="btn btn-info" asp-action="Index">Voltar</a>
 </div>

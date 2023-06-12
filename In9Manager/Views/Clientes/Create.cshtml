@@ -13,7 +13,7 @@
 <hr />
 <div class="row">
     <form asp-action="Create">
-        <div class="col-md-12">
+        <div class="col-md">
             <div class="row">
                 <div class="col-md-6">
                     <h5>Dados Pessoais</h5>
@@ -74,7 +74,7 @@
                         <div class="col-md-2">
                             <div class="mb-3">
                                 @Html.LabelFor(model => model.ClienteEndereco.NumeroLogradouro)
-                                <input type="text" class="form-control" asp-for="ClienteEndereco.NumeroLogradouro"/>
+                                <input type="number" class="form-control" asp-for="ClienteEndereco.NumeroLogradouro"/>
                             </div>
                         </div>
                     </div>

@@ -4,6 +4,7 @@ using In9Manager.Helpers.Session;
 using In9Manager.Models;
 using In9Manager.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace In9Manager.Controllers
 {
@@ -19,14 +20,15 @@ namespace In9Manager.Controllers
         }
         public IActionResult Login()
         {
+            if(_session.GetSession() != null) return RedirectToAction(nameof(HomeController.Index), "Home");
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SignIn(UsuarioViewModel model)
+        public async Task<IActionResult> SignIn(UsuarioViewModel model)
         {
-            var usuario = db.Usuarios.FirstOrDefault(m => m.Login == model.Login);
+            var usuario = await db.Usuarios.FirstOrDefaultAsync(m => m.Login == model.Login);
             if(usuario == null || model.Senha.GenerateHash() != usuario.Senha)
             {
                 TempData["Erro"] = "Usuário e/ou senha incorretos.";
@@ -37,6 +39,13 @@ namespace In9Manager.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
             return View(nameof(Login));
+        }
+
+        public IActionResult Logout()
+        {
+            if(_session.GetSession() == null) return View(nameof(Login));
+            _session.RemoveSession();
+            return RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }
 }

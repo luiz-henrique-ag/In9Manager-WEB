@@ -1,0 +1,56 @@
+﻿@using Models
+@using Data
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components
+@inject ApplicationContext db
+
+@if(Clientes == null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Nome
+                </th>
+                <th>
+                    CPF
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Clientes) {
+            <tr>
+                <td>
+                    @item.Nome
+                </td>
+                <td>
+                    @item.CPF
+                </td>
+                <td>
+                        <button class="btn btn-outline-dark" @onclick="( ()=> { clienteId = item.Id; InvokeAsync(StateHasChanged); })">Selecionar</button>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+    <input @bind="clienteId" type="number" disabled/>
+}
+
+@code {
+    private IList<Cliente> Clientes { get; set; } = default!;
+    private int clienteId { get; set; } = 12;
+    protected override async Task OnInitializedAsync()
+    {
+        Clientes = await db.Cliente.ToListAsync();
+    }
+    private void teste(int id)
+    {
+        clienteId = id;
+        
+    }
+}
