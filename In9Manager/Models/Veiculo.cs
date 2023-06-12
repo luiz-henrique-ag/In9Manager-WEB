@@ -2,6 +2,10 @@
 
 namespace In9Manager.Models
 {
+    public enum Categoria
+    {
+        Carro, Moto
+    }
     public class Veiculo
     {
         public int Id { get; set; }

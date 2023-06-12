@@ -31,13 +31,14 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuários</a>
                         </li>
-                        <li class="nav-item">
-                            @if(session.GetSession() != null)
-                            {
-                                <a class="nav-link">@session.GetSession().Nome</a>
-                            }
-                        </li>
                     </ul>
+                    <span class="navbar-text">
+                        @if (session.GetSession() != null)
+                        {
+                            <a class="nav-link">@session.GetSession().Nome</a>
+                            <a class="btn btn-danger">Logout</a>
+                        }
+                    </span>
                 </div>
             </div>
         </nav>

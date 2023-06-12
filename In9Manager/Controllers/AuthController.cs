@@ -1,7 +1,6 @@
 ﻿using In9Manager.Data;
 using In9Manager.Helpers.HashGenerator;
 using In9Manager.Helpers.Session;
-using In9Manager.Models;
 using In9Manager.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -43,9 +42,8 @@ namespace In9Manager.Controllers
 
         public IActionResult Logout()
         {
-            if(_session.GetSession() == null) return View(nameof(Login));
-            _session.RemoveSession();
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            if(_session.GetSession() != null) _session.RemoveSession();
+            return RedirectToAction(nameof(Login));
         }
     }
 }

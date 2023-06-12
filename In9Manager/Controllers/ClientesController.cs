@@ -134,7 +134,8 @@ namespace In9Manager.Controllers
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError("", "Erro");
+                        return View(model);
                     }
                 }
                 return RedirectToAction(nameof(Index));

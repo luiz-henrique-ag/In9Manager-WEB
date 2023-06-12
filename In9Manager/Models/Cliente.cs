@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace In9Manager.Models
 {
@@ -6,6 +7,8 @@ namespace In9Manager.Models
     {
         M,F
     }
+
+    [Index(nameof(CPF))]
     public class Cliente
     {
         public int Id { get; set; }

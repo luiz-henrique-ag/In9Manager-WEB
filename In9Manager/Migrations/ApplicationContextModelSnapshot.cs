@@ -65,7 +65,7 @@ namespace In9Manager.Migrations
                     b.HasAlternateKey("CPF")
                         .HasName("CPF");
 
-                    b.ToTable("Cliente");
+                    b.ToTable("Cliente", (string)null);
                 });
 
             modelBuilder.Entity("In9Manager.Models.ClienteEndereco", b =>
@@ -121,7 +121,7 @@ namespace In9Manager.Migrations
 
                     b.HasIndex("ClienteId");
 
-                    b.ToTable("ClienteEndereco");
+                    b.ToTable("ClienteEndereco", (string)null);
                 });
 
             modelBuilder.Entity("In9Manager.Models.Usuario", b =>
@@ -159,7 +159,7 @@ namespace In9Manager.Migrations
                     b.HasAlternateKey("Login")
                         .HasName("Login");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("In9Manager.Models.Veiculo", b =>
@@ -202,7 +202,7 @@ namespace In9Manager.Migrations
 
                     b.HasIndex("ClienteID");
 
-                    b.ToTable("Veiculos");
+                    b.ToTable("Veiculos", (string)null);
                 });
 
             modelBuilder.Entity("In9Manager.Models.ClienteEndereco", b =>

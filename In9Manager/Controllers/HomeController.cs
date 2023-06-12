@@ -18,6 +18,11 @@ namespace In9Manager.Controllers
             return View();
         }
 
+        public IActionResult Login()
+        {
+            return RedirectToAction(nameof(AuthController.Login), "Auth");
+        }
+
         public IActionResult Privacy()
         {
             return View();

@@ -25,6 +25,14 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// Preenche banco
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    SeedData.Initialize(services);
+}
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();

@@ -32,7 +32,7 @@ else
                     @item.CPF
                 </td>
                 <td>
-                        <button class="btn btn-outline-dark" @onclick="( ()=> { clienteId = item.Id; InvokeAsync(StateHasChanged); })">Selecionar</button>
+                    <button class="btn btn-outline-dark" @onclick="( ()=> { clienteId = item.Id; InvokeAsync(StateHasChanged); })">Selecionar</button>
                 </td>
             </tr>
     }
@@ -43,7 +43,7 @@ else
 
 @code {
     private IList<Cliente> Clientes { get; set; } = default!;
-    private int clienteId { get; set; } = 12;
+    private int clienteId { get; set; } = 0;
     protected override async Task OnInitializedAsync()
     {
         Clientes = await db.Cliente.ToListAsync();
@@ -51,6 +51,5 @@ else
     private void teste(int id)
     {
         clienteId = id;
-        
     }
 }

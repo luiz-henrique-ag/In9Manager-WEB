@@ -23,6 +23,9 @@ namespace In9Manager.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Cliente>()
+                .HasIndex(x => x.CPF);
+
+            modelBuilder.Entity<Cliente>()
                 .HasAlternateKey(x => x.CPF)
                 .HasName("CPF");
 
