@@ -19,6 +19,7 @@ namespace In9Manager.Data
         public DbSet<ClienteEndereco> ClienteEndereco { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Veiculo> Veiculos { get; set; }
+        public DbSet<Servico> Servicos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

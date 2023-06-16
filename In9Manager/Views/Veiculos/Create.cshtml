@@ -1,7 +1,7 @@
 ﻿@model In9Manager.Models.Veiculo
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Cadastrar";
     SelectList categorias = new SelectList(Enum.GetValues(typeof(Categoria)));
 }
 
@@ -13,7 +13,7 @@
 
 <div class="row">
     <form asp-action="Create">
-    <component type="typeof(In9Manager.Views.Shared.Components.ClientesTable)" render-mode="ServerPrerendered"/>
+        <component type="typeof(In9Manager.Views.Shared.Components.ClientesTable)" render-mode="ServerPrerendered"/>
         <div class="col-md-12">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
@@ -58,7 +58,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Voltar</a>
 </div>
 
 @section Scripts {
