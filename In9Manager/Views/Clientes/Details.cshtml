@@ -49,6 +49,16 @@
                 <dd class = "col-sm-10">
                     @Html.DisplayFor(model => model.Cliente.DataNascimento)
                 </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Veiculos)
+                </dt>
+                @foreach(var item in Model.Veiculos)
+                {
+                    <dd class="col-sm-2"></dd>
+                    <dd class="col-sm-10">
+                        @item.Modelo - @item.Placa
+                    </dd>
+                }
             </dl>
         </div>
         <div class="col">

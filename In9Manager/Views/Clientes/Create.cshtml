@@ -37,7 +37,7 @@
                         <div class="col-md-8">
                             <div class="mb-3">
                                 <label asp-for="Cliente.DataNascimento" class="control-label"></label>
-                                <input asp-for="Cliente.DataNascimento" class="form-control" />
+                                <input name="dataNascimento" class="form-control" id="data"/>
                                 <span asp-validation-for="Cliente.DataNascimento" class="text-danger"></span>
                             </div>
                         </div>
@@ -142,6 +142,12 @@
         $(document).ready(function () {
             $('#cep').inputmask({
                 mask: ['99999-999'],
+                keepStatic: true
+            });
+        });
+        $(document).ready(function () {
+            $('#data').inputmask({
+                mask: ['99/99/9999'],
                 keepStatic: true
             });
         });

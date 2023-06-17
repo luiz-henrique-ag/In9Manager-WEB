@@ -35,7 +35,7 @@
             </div>
             <div class="mb-3">
                 <label asp-for="Valor" class="control-label"></label>
-                <input asp-for="Valor" class="form-control" />
+                <input asp-for="Valor" class="form-control" id="preco"/>
                 <span asp-validation-for="Valor" class="text-danger"></span>
             </div>
             <div class="mb-3">
@@ -51,4 +51,17 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#preco').maskMoney({
+                prefix: '',
+                thousands: '.',
+                decimal: ',',
+                allowZero: true,
+                allowNegative: false
+            });
+        });
+    </script>
 }

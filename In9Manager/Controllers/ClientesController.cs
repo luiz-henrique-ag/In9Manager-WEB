@@ -42,12 +42,14 @@ namespace In9Manager.Controllers
             var endereco = await db.ClienteEndereco.Where(x => x.ClienteId == id).FirstOrDefaultAsync();
             var cliente = await db.Cliente
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (cliente == null || endereco == null)
+            var veiculos = await db.Veiculos.Where(x => x.ClienteID == id).ToListAsync();
+            if (cliente == null || endereco == null || veiculos == null)
             {
                 return NotFound();
             }
             model.Cliente = cliente;
             model.ClienteEndereco = endereco;
+            model.Veiculos = veiculos;
             return View(model);
         }
 
@@ -64,10 +66,11 @@ namespace In9Manager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ClienteViewModel model)
+        public async Task<IActionResult> Create(ClienteViewModel model, string dataNascimento)
         {
             Cliente cliente = model.Cliente;
             ClienteEndereco endereco = model.ClienteEndereco;
+            cliente.DataNascimento = DateTime.Parse(dataNascimento);
             if (ModelState.IsValid)
             {
                 db.Cliente.Add(cliente);
@@ -80,8 +83,8 @@ namespace In9Manager.Controllers
             else
             {
                 ModelState.AddModelError("", "Ocorreu um erro");
+                return View(model);
             }
-            return View(model);
         }
 
         // GET: Clientes/Edit/5
@@ -110,13 +113,13 @@ namespace In9Manager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ClienteViewModel model)
+        public async Task<IActionResult> Edit(int id, ClienteViewModel model, string dataNascimento)
         {
             if (id != model.Cliente.Id)
             {
                 return NotFound();
             }
-
+            model.Cliente.DataNascimento = DateTime.Parse(dataNascimento);
             if (ModelState.IsValid)
             {
                 model.ClienteEndereco.ClienteId = model.Cliente.Id;

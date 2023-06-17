@@ -20,6 +20,7 @@ namespace In9Manager.Data
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Veiculo> Veiculos { get; set; }
         public DbSet<Servico> Servicos { get; set; }
+        public DbSet<Prestador> Prestadores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

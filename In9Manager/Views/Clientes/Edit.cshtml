@@ -40,7 +40,7 @@
                         <div class="col-md-8">
                             <div class="mb-3">
                                 <label asp-for="Cliente.DataNascimento" class="control-label"></label>
-                                <input asp-for="Cliente.DataNascimento" class="form-control" />
+                                <input name="dataNascimento" class="form-control" id="data" value="@Model.Cliente.DataNascimento.ToShortDateString()"/>
                                 <span asp-validation-for="Cliente.DataNascimento" class="text-danger"></span>
                             </div>
                         </div>
@@ -128,6 +128,7 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js"></script>
     <script>
         $(document).ready(function () {
             $('#cpf').inputmask({
@@ -144,6 +145,12 @@
         $(document).ready(function () {
             $('#cep').inputmask({
                 mask: ['99999-999'],
+                keepStatic: true
+            });
+        });
+        $(document).ready(function () {
+            $('#data').inputmask({
+                mask: ['99/99/9999'],
                 keepStatic: true
             });
         });
