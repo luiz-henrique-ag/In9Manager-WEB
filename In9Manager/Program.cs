@@ -42,6 +42,6 @@ app.UseAuthorization();
 app.UseRequestLocalization("pt-br");
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Auth}/{action=Login}/{id?}");
 app.MapBlazorHub();
 app.Run();

@@ -10,94 +10,87 @@ using In9Manager.Models;
 
 namespace In9Manager.Controllers
 {
-    public class VeiculosController : Controller
+    public class PrestadoresController : Controller
     {
-        private readonly ApplicationContext db;
+        private readonly ApplicationContext _context;
 
-        public VeiculosController(ApplicationContext context)
+        public PrestadoresController(ApplicationContext context)
         {
-            db = context;
+            _context = context;
         }
 
-        // GET: Veiculos
+        // GET: Prestadores
         public async Task<IActionResult> Index()
         {
-            var applicationContext = db.Veiculos.Include(v => v.Cliente);
-            return View(await applicationContext.ToListAsync());
+              return _context.Prestadores != null ? 
+                          View(await _context.Prestadores.ToListAsync()) :
+                          Problem("Entity set 'ApplicationContext.Prestadores'  is null.");
         }
 
-        // GET: Veiculos/Details/5
+        // GET: Prestadores/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || db.Veiculos == null)
+            if (id == null || _context.Prestadores == null)
             {
                 return NotFound();
             }
 
-            var veiculo = await db.Veiculos
-                .Include(v => v.Cliente)
+            var prestador = await _context.Prestadores
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (veiculo == null)
+            if (prestador == null)
             {
                 return NotFound();
             }
 
-            return View(veiculo);
+            return View(prestador);
         }
 
-        // GET: Veiculos/Create
+        // GET: Prestadores/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Veiculos/Create
+        // POST: Prestadores/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Veiculo veiculo, int ClienteId)
+        public async Task<IActionResult> Create([Bind("Id,Nome,CPF,TipoPrestador,Telefone")] Prestador prestador)
         {
-            if(ClienteId == 0)
-            {
-                ModelState.AddModelError("", "Um Erro Ocorreu");
-                return View(veiculo);
-            }
-            veiculo.ClienteID = ClienteId;
             if (ModelState.IsValid)
             {
-                db.Veiculos.Add(veiculo);
-                await db.SaveChangesAsync();
+                _context.Add(prestador);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(veiculo);
+            return View(prestador);
         }
 
-        // GET: Veiculos/Edit/5
+        // GET: Prestadores/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || db.Veiculos == null)
+            if (id == null || _context.Prestadores == null)
             {
                 return NotFound();
             }
 
-            var veiculo = await db.Veiculos.FindAsync(id);
-            if (veiculo == null)
+            var prestador = await _context.Prestadores.FindAsync(id);
+            if (prestador == null)
             {
                 return NotFound();
             }
-            ViewData["ClienteID"] = new SelectList(db.Clientes, "Id", "CPF", veiculo.ClienteID);
-            return View(veiculo);
+            return View(prestador);
         }
 
-        // POST: Veiculos/Edit/5
+        // POST: Prestadores/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Modelo,Marca,Ano,Categoria,Placa,ClienteID")] Veiculo veiculo)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,CPF,TipoPrestador,Telefone")] Prestador prestador)
         {
-            if (id != veiculo.Id)
+            if (id != prestador.Id)
             {
                 return NotFound();
             }
@@ -106,12 +99,12 @@ namespace In9Manager.Controllers
             {
                 try
                 {
-                    db.Update(veiculo);
-                    await db.SaveChangesAsync();
+                    _context.Update(prestador);
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VeiculoExists(veiculo.Id))
+                    if (!PrestadorExists(prestador.Id))
                     {
                         return NotFound();
                     }
@@ -122,51 +115,49 @@ namespace In9Manager.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteID"] = new SelectList(db.Clientes, "Id", "CPF", veiculo.ClienteID);
-            return View(veiculo);
+            return View(prestador);
         }
 
-        // GET: Veiculos/Delete/5
+        // GET: Prestadores/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || db.Veiculos == null)
+            if (id == null || _context.Prestadores == null)
             {
                 return NotFound();
             }
 
-            var veiculo = await db.Veiculos
-                .Include(v => v.Cliente)
+            var prestador = await _context.Prestadores
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (veiculo == null)
+            if (prestador == null)
             {
                 return NotFound();
             }
 
-            return View(veiculo);
+            return View(prestador);
         }
 
-        // POST: Veiculos/Delete/5
+        // POST: Prestadores/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (db.Veiculos == null)
+            if (_context.Prestadores == null)
             {
-                return Problem("Entity set 'ApplicationContext.Veiculos'  is null.");
+                return Problem("Entity set 'ApplicationContext.Prestadores'  is null.");
             }
-            var veiculo = await db.Veiculos.FindAsync(id);
-            if (veiculo != null)
+            var prestador = await _context.Prestadores.FindAsync(id);
+            if (prestador != null)
             {
-                db.Veiculos.Remove(veiculo);
+                _context.Prestadores.Remove(prestador);
             }
             
-            await db.SaveChangesAsync();
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool VeiculoExists(int id)
+        private bool PrestadorExists(int id)
         {
-          return (db.Veiculos?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Prestadores?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

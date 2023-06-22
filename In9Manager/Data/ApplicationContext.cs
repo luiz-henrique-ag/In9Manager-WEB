@@ -15,13 +15,13 @@ namespace In9Manager.Data
         {
         }
 
-        public DbSet<Cliente> Cliente { get; set; } = default!;
-        public DbSet<ClienteEndereco> ClienteEndereco { get; set; }
+        public DbSet<Cliente> Clientes { get; set; } = default!;
+        public DbSet<ClienteEndereco> ClienteEnderecos { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Veiculo> Veiculos { get; set; }
         public DbSet<Servico> Servicos { get; set; }
         public DbSet<Prestador> Prestadores { get; set; }
-
+        public DbSet<PrestadorEndereco> PrestadorEnderecos { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Cliente>()
@@ -29,11 +29,15 @@ namespace In9Manager.Data
 
             modelBuilder.Entity<Cliente>()
                 .HasAlternateKey(x => x.CPF)
-                .HasName("CPF");
+                .HasName("CPF_Cliente");
 
             modelBuilder.Entity<Usuario>()
                 .HasAlternateKey(x => x.Login)
                 .HasName("Login");
+
+            modelBuilder.Entity<Prestador>()
+                .HasAlternateKey(x => x.CPF)
+                .HasName("CPF_Prestador");
         }
     }
 }

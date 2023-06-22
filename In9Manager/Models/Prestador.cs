@@ -15,6 +15,7 @@ namespace In9Manager.Models
         public string Nome { get; set; }
 
         [Required(ErrorMessage = "Campo Obrigatório.")]
+        [StringLength(14)]
         public string CPF { get; set; }
 
         [Required(ErrorMessage = "Campo Obrigatório.")]
@@ -22,6 +23,7 @@ namespace In9Manager.Models
         public int TipoPrestador { get; set; }
 
         [Required(ErrorMessage = "Campo Obrigatório.")]
+        [StringLength(14)]
         public string Telefone { get; set; }
     }
 }

@@ -35,6 +35,15 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuários</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="" asp-action="">Orçamentos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="" asp-action="">Ordens de Serviço</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Prestadores" asp-action="Index">Prestadores</a>
+                        </li>
                     </ul>
                     @if (session.GetSession() != null)
                     {
@@ -42,7 +51,7 @@
                             @session.GetSession().Nome
                         </span>
                         <span class="navbar-text">
-                            <a class="btn btn-danger">Logout</a>
+                            <a asp-controller="Auth" asp-action="Logout" class="btn btn-danger">Logout</a>
                         </span>
                     }
                 </div>

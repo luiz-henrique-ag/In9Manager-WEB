@@ -10,11 +10,11 @@ namespace In9Manager.Data
                 serviceProvider.GetRequiredService<
                     DbContextOptions<ApplicationContext>>()))
             {
-                if (context.Cliente.Any())
+                if (context.Clientes.Any())
                 {
                     return;   // DB has been seeded
                 }
-                context.Cliente.AddRange(
+                context.Clientes.AddRange(
                     
                 );
                 context.SaveChanges();

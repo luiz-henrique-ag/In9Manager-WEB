@@ -1,0 +1,139 @@
+﻿@model In9Manager.Models.ViewModels.PrestadorViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    SelectList estados = new SelectList(Enum.GetValues(typeof(Estados)));
+    SelectList tipoPrestador = new SelectList(Enum.GetValues(typeof(TipoPrestador)));
+    SelectList tipoLogradouro = new SelectList(Enum.GetValues(typeof(TipoLogradouro)));
+}
+
+<h1>Cadastrar</h1>
+
+<h4>Prestador</h4>
+<hr />
+<div class="row">
+    <form asp-action="Create">
+        <div class="col-md">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Dados Pessoais</h5>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label asp-for="Prestador.Nome" class="form-label"></label>
+                        <input asp-for="Prestador.Nome" class="form-control" />
+                        <span asp-validation-for="Prestador.Nome" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Prestador.CPF" class="form-label"></label>
+                        <input asp-for="Prestador.CPF" class="form-control" id="cpf" />
+                        <span asp-validation-for="Prestador.CPF" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Prestador.Telefone" class="form-label"></label>
+                        <input asp-for="Prestador.Telefone" class="form-control" id="telefone" />
+                        <span asp-validation-for="Prestador.Telefone" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Prestador.TipoPrestador" class="form-label"></label>
+                        <select asp-for="Prestador.TipoPrestador" class="form-select" asp-items="tipoPrestador"></select>
+                        <span asp-validation-for="Prestador.TipoPrestador" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h5>Dados de Endereço</h5>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <div class="mb-3">
+                                <label asp-for="Endereco.Logradouro" class="form-label"></label>
+                                <input asp-for="Endereco.Logradouro" class="form-control" />
+                                <span asp-validation-for="Endereco.Logradouro" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="mb-3">
+                                <label asp-for="Endereco.TipoLogradouro" class="form-label"></label>
+                                <select class="form-select" asp-for="Endereco.TipoLogradouro" asp-items="tipoLogradouro"></select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="mb-3">
+                                <label asp-for="Endereco.NumeroLogradouro" class="form-label"></label>
+                                <input type="number" class="form-control" asp-for="Endereco.NumeroLogradouro" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Endereco.Bairro" class="form-label"></label>
+                        <input asp-for="Endereco.Bairro" class="form-control" />
+                        <span asp-validation-for="Endereco.Bairro" class="text-danger"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label asp-for="Endereco.Cidade" class="form-label"></label>
+                                <input asp-for="Endereco.Cidade" class="form-control" />
+                                <span asp-validation-for="Endereco.Cidade" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label asp-for="Endereco.Estado" class="form-label"></label>
+                                <select class="form-select" asp-for="Endereco.Estado" asp-items="estados"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md">
+                            <div class="mb-3">
+                                <label asp-for="Endereco.Cep" class="form-label"></label>
+                                <input asp-for="Endereco.Cep" class="form-control" id="cep" />
+                                <span asp-validation-for="Endereco.Cep" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="mb-3">
+                                <label asp-for="Endereco.Complemento" class="form-label"></label>
+                                <input asp-for="Endereco.Complemento" class="form-control" />
+                                <span asp-validation-for="Endereco.Complemento" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="mb-3">
+                <input type="submit" value="Cadastrar" class="btn btn-lg btn-primary" />
+            </div>
+        </div>
+    </form>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#cpf').inputmask({
+                mask: ['999.999.999-99'],
+                keepStatic: true
+            });
+        });
+        $(document).ready(function () {
+            $('#telefone').inputmask({
+                mask: ['(99)9999-9999', '(99)99999-9999'],
+                keepStatic: true
+            });
+        });
+        $(document).ready(function () {
+            $('#cep').inputmask({
+                mask: ['99999-999'],
+                keepStatic: true
+            });
+        });
+    </script>
+}

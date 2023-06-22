@@ -13,28 +13,28 @@ namespace In9Manager.Models
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Campo Obrigatório.")]
         [StringLength(50)]
         public string Nome { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Campo Obrigatório.")]
         [StringLength(14)]
         public string CPF { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Campo Obrigatório.")]
         [StringLength(14)]
         public string Telefone { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Campo Obrigatório.")]
         [EmailAddress]
         [Display(Name = "E-Mail")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Campo Obrigatório.")]
         [StringLength(1)]
         public string Sexo { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Campo Obrigatório.")]
         [Display(Name = "Data de Nascimento")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]

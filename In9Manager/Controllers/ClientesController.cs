@@ -27,20 +27,20 @@ namespace In9Manager.Controllers
         public async Task<IActionResult> Index()
         {
             //if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
-            return View(await db.Cliente.ToListAsync());  
+            return View(await db.Clientes.ToListAsync());  
         }
 
         // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             //if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
-            if (id == null || db.Cliente == null)
+            if (id == null || db.Clientes == null)
             {
                 return NotFound();
             }
             var model = new ClienteViewModel();
-            var endereco = await db.ClienteEndereco.Where(x => x.ClienteId == id).FirstOrDefaultAsync();
-            var cliente = await db.Cliente
+            var endereco = await db.ClienteEnderecos.Where(x => x.ClienteId == id).FirstOrDefaultAsync();
+            var cliente = await db.Clientes
                 .FirstOrDefaultAsync(m => m.Id == id);
             var veiculos = await db.Veiculos.Where(x => x.ClienteID == id).ToListAsync();
             if (cliente == null || endereco == null || veiculos == null)
@@ -58,6 +58,7 @@ namespace In9Manager.Controllers
         {
             //if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             ClienteViewModel model = new ClienteViewModel();
+            TempData["data"] = DateTime.Now.ToShortDateString();
             return View(model);
         }
 
@@ -73,15 +74,16 @@ namespace In9Manager.Controllers
             cliente.DataNascimento = DateTime.Parse(dataNascimento);
             if (ModelState.IsValid)
             {
-                db.Cliente.Add(cliente);
+                db.Clientes.Add(cliente);
                 await db.SaveChangesAsync();
                 endereco.ClienteId = cliente.Id;
-                db.ClienteEndereco.Add(endereco);
+                db.ClienteEnderecos.Add(endereco);
                 await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             else
             {
+                TempData["data"] = dataNascimento;
                 ModelState.AddModelError("", "Ocorreu um erro");
                 return View(model);
             }
@@ -91,13 +93,13 @@ namespace In9Manager.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             //if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
-            if (id == null || db.Cliente == null)
+            if (id == null || db.Clientes == null)
             {
                 return NotFound();
             }
             var model = new ClienteViewModel();
-            var cliente = await db.Cliente.FirstOrDefaultAsync(x => x.Id == id);
-            var endereco = await db.ClienteEndereco.Where(x => x.ClienteId == id).FirstOrDefaultAsync();
+            var cliente = await db.Clientes.FirstOrDefaultAsync(x => x.Id == id);
+            var endereco = await db.ClienteEnderecos.Where(x => x.ClienteId == id).FirstOrDefaultAsync();
             if (cliente == null || endereco == null)
             {
                 return NotFound();
@@ -125,8 +127,8 @@ namespace In9Manager.Controllers
                 model.ClienteEndereco.ClienteId = model.Cliente.Id;
                 try
                 {
-                    db.Cliente.Update(model.Cliente);
-                    db.ClienteEndereco.Update(model.ClienteEndereco);
+                    db.Clientes.Update(model.Cliente);
+                    db.ClienteEnderecos.Update(model.ClienteEndereco);
                     await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -149,13 +151,13 @@ namespace In9Manager.Controllers
         // GET: Clientes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || db.Cliente == null || db.ClienteEndereco == null)
+            if (id == null || db.Clientes == null || db.ClienteEnderecos == null)
             {
                 return NotFound();
             }
             var model = new ClienteViewModel();
-            var endereco = await db.ClienteEndereco.Where(x => x.ClienteId == id).FirstOrDefaultAsync();
-            var cliente = await db.Cliente
+            var endereco = await db.ClienteEnderecos.Where(x => x.ClienteId == id).FirstOrDefaultAsync();
+            var cliente = await db.Clientes
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cliente == null || endereco == null)
             {
@@ -171,16 +173,16 @@ namespace In9Manager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (db.Cliente == null)
+            if (db.Clientes == null)
             {
                 return Problem("Entity set 'ApplicationContext.Cliente'  is null.");
             }
-            var cliente = await db.Cliente.FindAsync(id);
-            var endereco = await db.ClienteEndereco.FirstOrDefaultAsync(m => m.ClienteId == id);
+            var cliente = await db.Clientes.FindAsync(id);
+            var endereco = await db.ClienteEnderecos.FirstOrDefaultAsync(m => m.ClienteId == id);
             if (cliente != null || endereco != null)
             {
-                db.Cliente.Remove(cliente);
-                db.ClienteEndereco.Remove(endereco);
+                db.Clientes.Remove(cliente);
+                db.ClienteEnderecos.Remove(endereco);
             }
             
             await db.SaveChangesAsync();
@@ -189,11 +191,11 @@ namespace In9Manager.Controllers
 
         private bool ClienteExists(int id)
         {
-            return (db.Cliente?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (db.Clientes?.Any(e => e.Id == id)).GetValueOrDefault();
         }
         private bool EnderecoExists(int id)
         {
-            return (db.ClienteEndereco?.Any(x => x.Id == id)).GetValueOrDefault();
+            return (db.ClienteEnderecos?.Any(x => x.Id == id)).GetValueOrDefault();
         }
     }
 }

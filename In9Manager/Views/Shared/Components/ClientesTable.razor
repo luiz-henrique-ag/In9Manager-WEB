@@ -31,6 +31,6 @@
     private IList<Cliente> ClienteSelecionado;
     protected override async Task OnInitializedAsync()
     {
-        Clientes = await db.Cliente.ToListAsync();
+        Clientes = await db.Clientes.ToListAsync();
     }
 }
