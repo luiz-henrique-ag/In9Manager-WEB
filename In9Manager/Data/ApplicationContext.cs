@@ -38,6 +38,10 @@ namespace In9Manager.Data
             modelBuilder.Entity<Prestador>()
                 .HasAlternateKey(x => x.CPF)
                 .HasName("CPF_Prestador");
+
+            modelBuilder.Entity<Veiculo>()
+                .HasAlternateKey(x => x.Placa)
+                .HasName("Placa");
         }
     }
 }

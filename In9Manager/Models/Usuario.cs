@@ -4,7 +4,7 @@ namespace In9Manager.Models
 {
     public enum Permissao 
     { 
-        Administrador, Comum
+        Administrador = 1, Comum = 2
     }
     public class Usuario
     {
@@ -26,6 +26,7 @@ namespace In9Manager.Models
         [Required(ErrorMessage = "Campo Obrigatório")]
         public string Senha { get; set; }
 
-        public int Permissao { get; set; } = 0;
+        [Display(Name = "Permissão")]
+        public int Permissao { get; set; } = 2;
     }
 }

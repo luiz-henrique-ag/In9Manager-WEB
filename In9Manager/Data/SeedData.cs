@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using In9Manager.Helpers.HashGenerator;
+using In9Manager.Migrations;
+using Microsoft.EntityFrameworkCore;
 
 namespace In9Manager.Data
 {
@@ -10,13 +12,21 @@ namespace In9Manager.Data
                 serviceProvider.GetRequiredService<
                     DbContextOptions<ApplicationContext>>()))
             {
-                if (context.Clientes.Any())
+                if (context.Usuarios.Any())
                 {
                     return;   // DB has been seeded
                 }
-                context.Clientes.AddRange(
-                    
-                );
+
+                var usuario = new Models.Usuario
+                {
+                    Cpf = "000.000.000-00",
+                    Login = "admin",
+                    Permissao = 1,
+                    Nome = "admin",
+                    Senha = "admin".GenerateHash()
+                };
+
+                context.Add(usuario);
                 context.SaveChanges();
             }
         }

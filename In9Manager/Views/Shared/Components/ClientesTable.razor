@@ -27,10 +27,18 @@
 }
 </div>
 @code {
+    [Parameter]
+    public Cliente? Cliente { get; set; }
+
     private IList<Cliente> Clientes { get; set; } = default!;
-    private IList<Cliente> ClienteSelecionado;
+
+    public IList<Cliente> ClienteSelecionado { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        Clientes = await db.Clientes.ToListAsync();
+        Clientes = await db.Cliente.ToListAsync();
+        IList<Cliente> lista = new List<Cliente>();
+        if (Cliente != null) lista.Add(Cliente);
+        ClienteSelecionado = lista;
     }
 }

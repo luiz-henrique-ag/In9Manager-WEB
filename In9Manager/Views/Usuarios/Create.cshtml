@@ -1,12 +1,13 @@
 ﻿@model In9Manager.Models.Usuario
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Cadastrar";
+    SelectList permissao = new SelectList(Enum.GetValues(typeof(Permissao)));
 }
 
-<h1>Create</h1>
+<h1>Cadastrar</h1>
 
-<h4>Usuario</h4>
+<h4>Usuário</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
@@ -33,7 +34,7 @@
                 <div class="col-md-6">
                     <div class="mb-3">
                         <label asp-for="Permissao" class="form-label"></label>
-                        <input asp-for="Permissao" class="form-control" />
+                        <select asp-for="Permissao" asp-items="permissao" class="form-select"></select>
                         <span asp-validation-for="Permissao" class="text-danger"></span>
                     </div>
                     <div class="mb-3">
