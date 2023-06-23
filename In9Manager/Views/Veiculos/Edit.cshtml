@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Alterar";
+    SelectList categorias = new SelectList(Enum.GetValues(typeof(Categoria)));
 }
 
 <h1>Alterar</h1>
@@ -9,45 +10,50 @@
 <h4>Veículo</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+    <form asp-action="Edit">
+        <component type="typeof(In9Manager.Views.Shared.Components.ClientesTable)" render-mode="ServerPrerendered" param-ClienteId="@Model.Cliente.Id"/>
+        <div class="col-md-12">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Modelo" class="control-label"></label>
-                <input asp-for="Modelo" class="form-control" />
-                <span asp-validation-for="Modelo" class="text-danger"></span>
+            <input asp-for="Id" type="hidden"/>
+            <div class="row">
+                <div class="col-md">
+                    <div class="mb-3">
+                        <label asp-for="Placa" class="control-label"></label>
+                        <input asp-for="Placa" class="form-control" />
+                        <span asp-validation-for="Placa" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Modelo" class="control-label"></label>
+                        <input asp-for="Modelo" class="form-control" />
+                        <span asp-validation-for="Modelo" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="mb-3">
+                        <label asp-for="Categoria" class="control-label"></label>
+                        <select asp-for="Categoria" asp-items="categorias" class="form-select"></select>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Ano" class="control-label"></label>
+                        <input asp-for="Ano" class="form-control" />
+                        <span asp-validation-for="Ano" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Marca" class="control-label"></label>
-                <input asp-for="Marca" class="form-control" />
-                <span asp-validation-for="Marca" class="text-danger"></span>
+            <div class="row">
+                <div class="col-md">
+                    <div class="mb-3">
+                        <label asp-for="Marca" class="control-label"></label>
+                        <input asp-for="Marca" class="form-control" />
+                        <span asp-validation-for="Marca" class="text-danger"></span>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Ano" class="control-label"></label>
-                <input asp-for="Ano" class="form-control" />
-                <span asp-validation-for="Ano" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Categoria" class="control-label"></label>
-                <input asp-for="Categoria" class="form-control" />
-                <span asp-validation-for="Categoria" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Placa" class="control-label"></label>
-                <input asp-for="Placa" class="form-control" />
-                <span asp-validation-for="Placa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ClienteID" class="control-label"></label>
-                <select asp-for="ClienteID" class="form-control" asp-items="ViewBag.ClienteID"></select>
-                <span asp-validation-for="ClienteID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <input type="submit" value="Salvar" class="btn btn-primary" />
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
 </div>
 
 <div>

@@ -81,12 +81,11 @@ namespace In9Manager.Controllers
                 return NotFound();
             }
 
-            var veiculo = await db.Veiculos.FindAsync(id);
+            var veiculo = await db.Veiculos.Include(x => x.Cliente).FirstOrDefaultAsync(x=> x.Id == id);
             if (veiculo == null)
             {
                 return NotFound();
             }
-            ViewData["ClienteID"] = new SelectList(db.Clientes, "Id", "CPF", veiculo.ClienteID);
             return View(veiculo);
         }
 
@@ -95,7 +94,7 @@ namespace In9Manager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Modelo,Marca,Ano,Categoria,Placa,ClienteID")] Veiculo veiculo)
+        public async Task<IActionResult> Edit(int id, Veiculo veiculo, int ClienteId)
         {
             if (id != veiculo.Id)
             {
@@ -104,6 +103,7 @@ namespace In9Manager.Controllers
 
             if (ModelState.IsValid)
             {
+                veiculo.ClienteID = ClienteId;
                 try
                 {
                     db.Update(veiculo);
@@ -122,7 +122,6 @@ namespace In9Manager.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteID"] = new SelectList(db.Clientes, "Id", "CPF", veiculo.ClienteID);
             return View(veiculo);
         }
 
