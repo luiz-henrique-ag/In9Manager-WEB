@@ -22,6 +22,8 @@ namespace In9Manager.Data
         public DbSet<Servico> Servicos { get; set; }
         public DbSet<Prestador> Prestadores { get; set; }
         public DbSet<PrestadorEndereco> PrestadorEnderecos { get; set; }
+        public DbSet<Orcamento> Orcamentos { get; set; }
+        public DbSet<OrcamentoServico> OrcamentoServicos { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Cliente>()

@@ -11,6 +11,12 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Placa)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Placa)
+        </dd>
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Modelo)
         </dt>
         <dd class = "col-sm-10">
@@ -35,20 +41,16 @@
             @Html.DisplayFor(model => model.Categoria)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Placa)
+            @Html.DisplayNameFor(model => model.ClienteID)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Placa)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Cliente)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Cliente.CPF)
+            @Html.DisplayFor(model => model.Cliente.Nome)
         </dd>
     </dl>
 </div>
-<div>
-    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.Id">Alterar</a>
-    <a class="btn btn-info" asp-action="Index">Voltar</a>
+<div class="mb-3">
+    <a class="btn btn-info" asp-action="Edit" asp-route-id="@Model?.Id">Alterar</a>
 </div>
+<div>
+    <a asp-action="Index">Voltar</a>
+</div>    

@@ -12,30 +12,30 @@ namespace In9Manager.Controllers
 {
     public class ServicosController : Controller
     {
-        private readonly ApplicationContext _context;
+        private readonly ApplicationContext db;
 
         public ServicosController(ApplicationContext context)
         {
-            _context = context;
+            db = context;
         }
 
         // GET: Servicos
         public async Task<IActionResult> Index()
         {
-              return _context.Servicos != null ? 
-                          View(await _context.Servicos.ToListAsync()) :
+              return db.Servicos != null ? 
+                          View(await db.Servicos.ToListAsync()) :
                           Problem("Entity set 'ApplicationContext.Servicos'  is null.");
         }
 
         // GET: Servicos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Servicos == null)
+            if (id == null || db.Servicos == null)
             {
                 return NotFound();
             }
 
-            var servico = await _context.Servicos
+            var servico = await db.Servicos
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (servico == null)
             {
@@ -48,6 +48,7 @@ namespace In9Manager.Controllers
         // GET: Servicos/Create
         public IActionResult Create()
         {
+            TempData["Preco"] = "0,0";
             return View();
         }
 
@@ -56,26 +57,30 @@ namespace In9Manager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Descricao,Categoria,TipoMaoDeObra,Valor,DataAtualizacao")] Servico servico)
+        public async Task<IActionResult> Create(Servico servico, string preco)
         {
+            servico.Valor = double.Parse(preco.Remove(0, 2));
+            
             if (ModelState.IsValid)
             {
-                _context.Add(servico);
-                await _context.SaveChangesAsync();
+                db.Servicos.Add(servico);
+                await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            
+            TempData["Preco"] = preco;
             return View(servico);
         }
 
         // GET: Servicos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Servicos == null)
+            if (id == null || db.Servicos == null)
             {
                 return NotFound();
             }
 
-            var servico = await _context.Servicos.FindAsync(id);
+            var servico = await db.Servicos.FindAsync(id);
             if (servico == null)
             {
                 return NotFound();
@@ -99,8 +104,8 @@ namespace In9Manager.Controllers
             {
                 try
                 {
-                    _context.Update(servico);
-                    await _context.SaveChangesAsync();
+                    db.Update(servico);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -121,12 +126,12 @@ namespace In9Manager.Controllers
         // GET: Servicos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Servicos == null)
+            if (id == null || db.Servicos == null)
             {
                 return NotFound();
             }
 
-            var servico = await _context.Servicos
+            var servico = await db.Servicos
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (servico == null)
             {
@@ -141,23 +146,23 @@ namespace In9Manager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Servicos == null)
+            if (db.Servicos == null)
             {
                 return Problem("Entity set 'ApplicationContext.Servicos'  is null.");
             }
-            var servico = await _context.Servicos.FindAsync(id);
+            var servico = await db.Servicos.FindAsync(id);
             if (servico != null)
             {
-                _context.Servicos.Remove(servico);
+                db.Servicos.Remove(servico);
             }
             
-            await _context.SaveChangesAsync();
+            await db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ServicoExists(int id)
         {
-          return (_context.Servicos?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (db.Servicos?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

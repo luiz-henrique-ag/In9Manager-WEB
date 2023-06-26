@@ -2,10 +2,6 @@
 
 namespace In9Manager.Models
 {
-    public enum TipoPrestador
-    {
-        Terceirizado, Local
-    }
     public class Prestador
     {
         public int Id { get; set; }

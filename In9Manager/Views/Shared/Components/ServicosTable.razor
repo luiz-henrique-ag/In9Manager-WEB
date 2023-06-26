@@ -1,0 +1,30 @@
+﻿@using Models
+@using Data
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationContext db
+
+<table class="fixed_header">
+    <thead>
+        <tr>
+            <th>Serviço</th>
+            <th>Valor</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Servicos)
+        {   
+            <tr>
+                <td>@item.Nome</td>
+                <td>@item.Descricao</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private IList<Servico> Servicos { get; set; } = default!;
+    protected override async Task OnInitializedAsync()
+    {
+        Servicos = await db.Servicos.ToListAsync(); 
+    }
+}

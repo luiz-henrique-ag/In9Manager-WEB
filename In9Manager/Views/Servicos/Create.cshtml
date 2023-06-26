@@ -2,6 +2,16 @@
 
 @{
     ViewData["Title"] = "Cadastrar";
+    IList<object> list = new List<object>();
+    foreach (var item in (Enum.GetValues(typeof(TipoMaodeObra))) ){
+        list.Add(new
+        {
+            Id = (int)item,
+            Nome = item
+        });
+    }
+    SelectList tipo = new SelectList(list, "Id", "Nome");
+    
 }
 
 <h1>Cadastrar</h1>
@@ -29,13 +39,11 @@
             </div>
             <div class="mb-3">
                 <label asp-for="TipoMaoDeObra" class="control-label"></label>
-                <input asp-for="TipoMaoDeObra" class="form-control" />
-                <span asp-validation-for="TipoMaoDeObra" class="text-danger"></span>
+                <select asp-for="TipoMaoDeObra" asp-items="tipo" class="form-select"></select>
             </div>
             <div class="mb-3">
                 <label asp-for="Valor" class="control-label"></label>
-                <input asp-for="Valor" class="form-control" id="preco"/>
-                <span asp-validation-for="Valor" class="text-danger"></span>
+                <input name="preco" class="form-control" id="preco" value="@TempData["Preco"]"/>
             </div>
             <div class="mb-3">
                 <input type="submit" value="Salvar" class="btn btn-primary" />
@@ -55,7 +63,7 @@
     <script>
         $(document).ready(function () {
             $('#preco').maskMoney({
-                prefix: '',
+                prefix: 'R$ ',
                 thousands: '.',
                 decimal: ',',
                 allowZero: true,

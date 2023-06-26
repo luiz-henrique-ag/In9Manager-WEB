@@ -2,7 +2,7 @@
 
 namespace In9Manager.Models
 {
-    public enum Permissao 
+    public enum UsuarioPermissao 
     { 
         Administrador = 1, Comum = 2
     }

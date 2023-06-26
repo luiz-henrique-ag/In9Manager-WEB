@@ -2,6 +2,10 @@
 
 namespace In9Manager.Models
 {
+    public enum TipoMaodeObra
+    {
+        Terceirizada = 1, Local = 2
+    }
     public class Servico
     {
         public int Id { get; set; }

@@ -2,7 +2,7 @@
 
 namespace In9Manager.Models
 {
-    public enum Categoria
+    public enum VeiculoCategoria
     {
         Carro, Moto
     }
@@ -32,6 +32,7 @@ namespace In9Manager.Models
         public string Placa { get; set; } = string.Empty;
 
         [Required]
+        [Display(Name = "Proprietário")]
         public int ClienteID { get; set; }
         public Cliente? Cliente { get; set; }
     }
