@@ -140,11 +140,13 @@ namespace In9Manager.Controllers
                     else
                     {
                         ModelState.AddModelError("", "Erro");
+                        TempData["data"] = dataNascimento;
                         return View(model);
                     }
                 }
                 return RedirectToAction(nameof(Index));
             }
+            TempData["data"] = dataNascimento;
             return View(model);
         }
 

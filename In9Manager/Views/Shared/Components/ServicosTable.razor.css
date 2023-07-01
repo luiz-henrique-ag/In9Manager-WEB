@@ -1,12 +1,9 @@
-﻿.fixed_header {
-    width: 400px;
-    table-layout: fixed;
-    border-collapse: collapse;
+﻿thead {
+    position: sticky;
+    top: -1px;
+    background-color: white;
+    border-bottom: 1px black solid;
 }
-
-.fixed_header tbody {
-    display: block;
-    width: 100%;
-    overflow: auto;
-    height: 100px;
-}
+    thead th {
+        position: sticky;
+    }

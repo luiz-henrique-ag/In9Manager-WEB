@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Cadastrar";
     SelectList categorias = new SelectList(Enum.GetValues(typeof(VeiculoCategoria)));
+    string NomeLabel = "Proprietário";
 }
 
 <h1>Cadastrar</h1>
@@ -13,7 +14,7 @@
 
 <div class="row">
     <form asp-action="Create">
-        <component type="typeof(In9Manager.Views.Shared.Components.ClientesTable)" render-mode="ServerPrerendered"/>
+        <component type="typeof(In9Manager.Views.Shared.Components.ClientesTable)" render-mode="ServerPrerendered" param-NomeLabel="NomeLabel"/>
         <div class="col-md-12">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">

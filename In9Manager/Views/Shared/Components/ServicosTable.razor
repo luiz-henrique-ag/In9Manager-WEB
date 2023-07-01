@@ -3,28 +3,82 @@
 @using Microsoft.EntityFrameworkCore
 @inject ApplicationContext db
 
-<table class="fixed_header">
-    <thead>
-        <tr>
-            <th>Serviço</th>
-            <th>Valor</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var item in Servicos)
-        {   
-            <tr>
-                <td>@item.Nome</td>
-                <td>@item.Descricao</td>
-            </tr>
+@if(Servicos == null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <div class="col-md">
+        <div class="overflow-auto" style="height: 200px">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Serviço</th>
+                        <th>Valor</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var item in Servicos)
+                    {   
+                        <tr>
+                            <td>@item.Nome</td>
+                            <td>R$ @item.Valor</td>
+                            <td><button class="btn btn-outline-primary" type="button" @onclick="(() => { AdicionaServico(item); })">Adicionar</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md">
+        <table class="table mb-3">
+            <thead>
+                <tr>
+                    <th>Serviços Adicionados</th>
+                    <th></th>
+                </tr>
+            </thead>
+        @if(ServicosEscolhidos != null && ServicosEscolhidos.Count != 0)
+        {
+            <tbody>
+                @foreach(var item in ServicosEscolhidos)
+                {
+                    <tr>
+                        <td>@item.Nome</td>
+                        <td>
+                            <button class="btn btn-danger" type="button" @onclick="() => ServicosEscolhidos.Remove(item)">Remover</button>
+                            <input type="hidden" name="Servicos" value="@item.Id">
+                        </td>
+                    </tr>
+                }
+            </tbody>
         }
-    </tbody>
-</table>
-
+        else
+        {
+             <tbody>
+                 <tr>
+                     <td>Nenhum</td>
+                     <td></td>
+                 </tr>
+             </tbody>   
+        }
+        </table>
+    </div>
+}
 @code {
+    private List<Servico> ServicosEscolhidos = new List<Servico>();
     private IList<Servico> Servicos { get; set; } = default!;
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        Servicos = await db.Servicos.ToListAsync(); 
+        Servicos = db.Servicos.ToList(); 
+    }
+    private void AdicionaServico(Servico servico)
+    {
+        if (!ServicosEscolhidos.Contains(servico))
+        {
+            ServicosEscolhidos.Add(servico);
+        }
     }
 }

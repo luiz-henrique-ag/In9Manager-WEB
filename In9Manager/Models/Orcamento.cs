@@ -1,5 +1,4 @@
-﻿using Microsoft.Identity.Client;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace In9Manager.Models
 {
@@ -32,6 +31,9 @@ namespace In9Manager.Models
         public double ValorTotal { get; set; }
 
         [Required(ErrorMessage = "Campo Obrigatório.")]
+        [Display(Name = "Placa do Veículo")]
+        [StringLength(7)]
+        [MinLength(7)]
         public string PlacaVeiculo { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Campo Obrigatório.")]

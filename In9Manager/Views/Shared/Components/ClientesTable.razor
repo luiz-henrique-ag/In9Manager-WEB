@@ -5,6 +5,7 @@
 @using Radzen
 
 @inject ApplicationContext db
+
 <div class="col-md">
 <div class="mb-3">
 <RadzenDataGrid AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="4"
@@ -20,7 +21,7 @@
 @if (ClienteSelecionado?.Any() == true)
 {
     <div class="mb-3">
-        <label class="form-label">Proprietário</label>
+        <label class="form-label">@NomeLabel</label>
         <input type="text" @bind="@ClienteSelecionado[0].Nome" class="form-control" disabled/>
         <input type="hidden" name="ClienteId" @bind="@ClienteSelecionado[0].Id"/>
     </div>
@@ -29,6 +30,9 @@
 @code {
     [Parameter]
     public int ClienteId { get; set; }
+
+    [Parameter]
+    public string NomeLabel { get; set; } = "Cliente";
 
     private IList<Cliente> Clientes { get; set; } = default!;
 

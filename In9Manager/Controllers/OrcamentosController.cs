@@ -48,7 +48,18 @@ namespace In9Manager.Controllers
         // GET: Orcamentos/Create
         public IActionResult Create()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "CPF");
+            IList<object> list = new List<object>();
+            foreach (var item in (Enum.GetValues(typeof(OrcamentoFormaPagamento))))
+            {
+                list.Add(new
+                {
+                    Id = (int)item,
+                    Nome = item
+                });
+            }
+            SelectList forma = new SelectList(list, "Id", "Nome");
+            ViewData["FormaPagamento"] = forma;
+            ViewData["dataCriacao"] = DateTime.Now.ToShortDateString();
             return View();
         }
 
@@ -57,15 +68,17 @@ namespace In9Manager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ClienteId,DataCriacao,DataValidade,ValorTotal,PlacaVeiculo,Desconto,ValorFinal,Status,FormaPagamento,NumeroParcelas")] Orcamento orcamento)
+        public async Task<IActionResult> Create(Orcamento orcamento, List<int> Servicos, string dataCriacao, string dataValidade)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(orcamento);
-                await _context.SaveChangesAsync();
+                //_context.Add(orcamento);
+                // _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "CPF", orcamento.ClienteId);
+            TempData["dataCriacao"] = dataCriacao;
+            TempData["dataValidade"] = dataValidade;
+
             return View(orcamento);
         }
 

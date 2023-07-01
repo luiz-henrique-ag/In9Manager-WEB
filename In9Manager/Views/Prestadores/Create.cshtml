@@ -1,13 +1,13 @@
 ﻿@model In9Manager.Models.ViewModels.PrestadorViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Novo Prestador";
     SelectList estados = new SelectList(Enum.GetValues(typeof(Estados)));
     SelectList tipoPrestador = new SelectList(Enum.GetValues(typeof(TipoMaodeObra)));
     SelectList tipoLogradouro = new SelectList(Enum.GetValues(typeof(TipoLogradouro)));
 }
 
-<h1>Cadastrar</h1>
+<h1>Novo</h1>
 
 <h4>Prestador</h4>
 <hr />
