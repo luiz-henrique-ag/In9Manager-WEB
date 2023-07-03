@@ -10,7 +10,7 @@
 else
 {
     <div class="col-md">
-        <div class="overflow-auto" style="height: 200px">
+        <div class="overflow-auto mb-5" style="height: 200px">
             <table class="table">
                 <thead>
                     <tr>
@@ -33,43 +33,47 @@ else
         </div>
     </div>
     <div class="col-md">
-        <table class="table mb-3">
-            <thead>
-                <tr>
-                    <th>Serviços Adicionados</th>
-                    <th></th>
-                </tr>
-            </thead>
-        @if(ServicosEscolhidos != null && ServicosEscolhidos.Count != 0)
-        {
-            <tbody>
-                @foreach(var item in ServicosEscolhidos)
-                {
+        <div class="overflow-auto" style="height: 200px">
+            <table class="table mb-3">
+                <thead>
                     <tr>
-                        <td>@item.Nome</td>
-                        <td>
-                            <button class="btn btn-danger" type="button" @onclick="() => ServicosEscolhidos.Remove(item)">Remover</button>
-                            <input type="hidden" name="Servicos" value="@item.Id">
-                        </td>
+                        <th>Serviços Adicionados</th>
+                        <th></th>
                     </tr>
-                }
-            </tbody>
-        }
-        else
-        {
-             <tbody>
-                 <tr>
-                     <td>Nenhum</td>
-                     <td></td>
-                 </tr>
-             </tbody>   
-        }
-        </table>
+                </thead>
+            @if(ServicosEscolhidos != null && ServicosEscolhidos.Count != 0)
+            {
+                <tbody>
+                    @foreach(var item in ServicosEscolhidos)
+                    {
+                        <tr>
+                            <td>@item.Nome</td>
+                            <td>
+                                <button class="btn btn-danger" type="button" @onclick="( () => RemoveServico(item))">Remover</button>
+                                <input type="hidden" name="Servicos" value="@item.Id">
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            }
+            else
+            {
+                 <tbody>
+                     <tr>
+                         <td>Nenhum</td>
+                         <td></td>
+                     </tr>
+                 </tbody>   
+            }
+            </table>
+        </div>
+        <input type="text" @bind=Valor name="Valor" id="preco"/>
     </div>
-}
+}   
 @code {
     private List<Servico> ServicosEscolhidos = new List<Servico>();
     private IList<Servico> Servicos { get; set; } = default!;
+    private double Valor { get; set; } = 0.0;
     protected override void OnInitialized()
     {
         Servicos = db.Servicos.ToList(); 
@@ -78,7 +82,13 @@ else
     {
         if (!ServicosEscolhidos.Contains(servico))
         {
+            Valor += servico.Valor;
             ServicosEscolhidos.Add(servico);
         }
+    }
+    private void RemoveServico(Servico servico)
+    {
+        ServicosEscolhidos.Remove(servico);
+        Valor -= servico.Valor;
     }
 }
