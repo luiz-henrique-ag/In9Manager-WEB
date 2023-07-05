@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "Orçamentos";
+    var Status = new Dictionary<int, object>();
+    foreach (var item in Enum.GetValues(typeof(OrcamentoStatus)))
+    {
+        Status.Add((int)item, item);
+    }
 }
 
 <h1>Orçamentos</h1>
@@ -13,7 +18,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Cliente)
+                Código
+            </th>
+            <th>
+                Cliente
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DataCriacao)
@@ -22,25 +30,10 @@
                 @Html.DisplayNameFor(model => model.DataValidade)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ValorTotal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PlacaVeiculo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Desconto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ValorFinal)
+                Identificador do Veículo
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FormaPagamento)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumeroParcelas)
             </th>
             <th></th>
         </tr>
@@ -49,7 +42,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Cliente.CPF)
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cliente.Nome)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DataCriacao)
@@ -58,25 +54,10 @@
                 @Html.DisplayFor(modelItem => item.DataValidade)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ValorTotal)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.PlacaVeiculo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Desconto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ValorFinal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FormaPagamento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NumeroParcelas)
+                @Status[item.Status]
             </td>
             <td>
                 <a class="btn btn-info" asp-action="Edit" asp-route-id="@item.Id">Alterar</a>

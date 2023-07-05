@@ -7,21 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using In9Manager.Data;
 using In9Manager.Models;
+using In9Manager.Helpers.Session;
 
 namespace In9Manager.Controllers
 {
     public class VeiculosController : Controller
     {
         private readonly ApplicationContext db;
-
-        public VeiculosController(ApplicationContext context)
+        private readonly ISessao _session;
+        public VeiculosController(ApplicationContext context, ISessao session)
         {
             db = context;
+            _session = session;
         }
 
         // GET: Veiculos
         public async Task<IActionResult> Index()
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             var applicationContext = db.Veiculos.Include(v => v.Cliente);
             return View(await applicationContext.ToListAsync());
         }
@@ -29,6 +32,7 @@ namespace In9Manager.Controllers
         // GET: Veiculos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Veiculos == null)
             {
                 return NotFound();
@@ -48,6 +52,7 @@ namespace In9Manager.Controllers
         // GET: Veiculos/Create
         public IActionResult Create()
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             return View();
         }
 
@@ -76,6 +81,7 @@ namespace In9Manager.Controllers
         // GET: Veiculos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Veiculos == null)
             {
                 return NotFound();
@@ -128,6 +134,7 @@ namespace In9Manager.Controllers
         // GET: Veiculos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Veiculos == null)
             {
                 return NotFound();

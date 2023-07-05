@@ -7,22 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using In9Manager.Data;
 using In9Manager.Models;
+using In9Manager.Helpers.Session;
 
 namespace In9Manager.Controllers
 {
     public class ServicosController : Controller
     {
         private readonly ApplicationContext db;
-
-        public ServicosController(ApplicationContext context)
+        private readonly ISessao _session;
+        public ServicosController(ApplicationContext context, ISessao session)
         {
             db = context;
+            _session = session;
         }
 
         // GET: Servicos
         public async Task<IActionResult> Index()
         {
-              return db.Servicos != null ? 
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            return db.Servicos != null ? 
                           View(await db.Servicos.ToListAsync()) :
                           Problem("Entity set 'ApplicationContext.Servicos'  is null.");
         }
@@ -30,6 +33,7 @@ namespace In9Manager.Controllers
         // GET: Servicos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Servicos == null)
             {
                 return NotFound();
@@ -48,6 +52,7 @@ namespace In9Manager.Controllers
         // GET: Servicos/Create
         public IActionResult Create()
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             TempData["Preco"] = "0,0";
             return View();
         }
@@ -59,7 +64,7 @@ namespace In9Manager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Servico servico, string preco)
         {
-            servico.Valor = double.Parse(preco.Remove(0, 2));
+            servico.Valor = decimal.Parse(preco.Remove(0, 2));
             
             if (ModelState.IsValid)
             {
@@ -75,6 +80,7 @@ namespace In9Manager.Controllers
         // GET: Servicos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Servicos == null)
             {
                 return NotFound();
@@ -93,7 +99,7 @@ namespace In9Manager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Descricao,Categoria,TipoMaoDeObra,Valor,DataAtualizacao")] Servico servico)
+        public async Task<IActionResult> Edit(int id, Servico servico)
         {
             if (id != servico.Id)
             {
@@ -126,6 +132,7 @@ namespace In9Manager.Controllers
         // GET: Servicos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Servicos == null)
             {
                 return NotFound();

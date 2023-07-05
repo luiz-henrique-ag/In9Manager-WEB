@@ -1,0 +1,236 @@
+﻿@using Models
+@using Data
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components
+@using Radzen
+@inject ApplicationContext db
+
+<div class="row">
+    @if(Clientes == null || Clientes.Count == 0)
+    {
+        <p>Carregando...</p>
+    }
+    else
+    {
+        <div class="col-md">
+            <div class="overflow-auto mb-5" style="height: 200px">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Clientes)
+                        {
+                            <tr @onclick="(async () => { await CarregaVeiculos(item.Cliente.Id); SelecionarCliente(item); })"
+                                class="@(item.IsSelected ? "active" : "")">
+                                <td>@item.Cliente.Nome</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        @if (TemPlaca)
+        {
+            <div class="col-md">
+                <div class="overflow-auto mb-5" style="height: 200px">
+                    <table class="table">
+                            @if(Veiculos == null || Veiculos.Count == 0)
+                            {
+                                <thead>
+                                    <tr>
+                                        <th>Veículos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        Nenhum veículo cadastrado.
+                                    </td>
+                                </tr>
+                                </tbody>
+                            }
+                            else
+                            {
+                                <thead>
+                                    <tr>
+                                        <th>Placa</th>
+                                        <th>Marca</th>
+                                        <th>Modelo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Veiculos)
+                                    {
+                                        <tr @onclick="(() => SelecionarVeiculo(item))" class="@(item.IsSelected ? "active" : "")">
+                                            <td>@item.Veiculo.Placa</td>
+                                            <td>@item.Veiculo.Marca</td>
+                                            <td>@item.Veiculo.Modelo</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            }
+                   
+                    </table>
+                </div>
+            </div>
+        }
+    }
+    <div class="mb-3">
+        <input type="checkbox" @onchange="VerificaPlaca">
+        <label class="form-label">Veículo sem Placa</label>
+    </div>
+    @if (SelectedCliente != null)
+    {
+        <div class="mb-3">
+            <label class="form-label">Cliente</label>
+            <input @bind="SelectedCliente.Cliente.Nome" class="form-control" readonly/>
+        </div>
+        <input type="hidden" name="ClienteId" value="@SelectedCliente.Cliente.Id"/>
+    }
+    @if(SelectedVeiculo != null)
+    {
+        /* Não tem placa */
+        @if(SelectedVeiculo.Veiculo.Id == -1)
+        {
+            <div class="mb-3">
+                <label class="form-label">Veículo</label>
+                <input class="form-control" name="Placa" placeholder="Identificador do Veículo"/>
+            </div>
+        }
+        else
+        {
+             <div class="mb-3">
+                <label class="form-label">Veículo</label>
+                <input name="Placa" @bind="SelectedVeiculo.Veiculo.Placa" class="form-control" readonly />
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private class ClienteSelecionado
+    {
+        public Cliente Cliente{ get; set; }
+        public bool IsSelected{ get; set; } 
+    }
+
+    private class VeiculoSelecionado
+    {
+        public Veiculo Veiculo{ get; set; }
+        public bool IsSelected{ get; set; } 
+    }
+    
+    private bool TemPlaca { get; set; } = true;
+
+    private IList<ClienteSelecionado> Clientes { get; set; } = default!;
+
+    private IList<VeiculoSelecionado> Veiculos { get; set; } = default!;
+
+    private ClienteSelecionado SelectedCliente { get; set; }
+
+    private VeiculoSelecionado SelectedVeiculo { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var clientes = await db.Clientes.ToListAsync();
+        SelectedCliente = new ClienteSelecionado
+        {
+            Cliente = new Cliente
+            {
+                Id = 0,
+                Nome = "Selecione um Cliente"
+            }
+
+        };
+        SelectedVeiculo = new VeiculoSelecionado
+            {
+                Veiculo = new Veiculo
+                {
+                    Id = 0,
+                    Placa = "Selecione um Veículo"
+                }
+            };
+        var lista = new List<ClienteSelecionado>();
+        clientes.ForEach(x =>
+        {
+            var cliente = new ClienteSelecionado();
+            cliente.Cliente = x;
+            lista.Add(cliente);
+        });
+        Clientes = lista;
+    }
+
+    private async Task CarregaVeiculos(int ClienteId)
+    {
+        var veiculos = await db.Veiculos.Where(x => x.ClienteID == ClienteId).ToListAsync();
+        var lista = new List<VeiculoSelecionado>();
+        veiculos.ForEach(x =>
+        {
+            var veiculo = new VeiculoSelecionado();
+            veiculo.Veiculo = x;
+            lista.Add(veiculo);
+        });
+        Veiculos = lista;
+    }
+
+    private void SelecionarCliente(ClienteSelecionado cliente)
+    {
+        if(!cliente.IsSelected)
+        {
+            SelectedCliente.IsSelected = false;
+            SelectedCliente = cliente;
+            cliente.IsSelected = true;
+            SelectedVeiculo.IsSelected = false;
+            var veiculo = new VeiculoSelecionado
+            {
+                Veiculo = new Veiculo
+                {
+                    Id = 0,
+                    Placa = "Selecione um Veículo"
+                }
+            };
+            if (!TemPlaca)
+            {
+                veiculo.Veiculo.Id = -1;
+                SelectedVeiculo = veiculo;
+            }
+            else SelectedVeiculo = veiculo;
+        }
+    }
+    private void SelecionarVeiculo(VeiculoSelecionado veiculo)
+    {
+        if(!veiculo.IsSelected)
+        {
+            SelectedVeiculo.IsSelected = false;
+            SelectedVeiculo = veiculo;
+            veiculo.IsSelected = true;
+        }
+    }
+    private void VerificaPlaca()
+    {
+        TemPlaca = !TemPlaca;
+        var veiculo = new VeiculoSelecionado
+            {
+                Veiculo = new Veiculo
+                {
+                    Id = -1,
+                    Placa = "Selecione um Veículo"
+                }
+            };
+        if (!TemPlaca)
+        {
+            SelectedVeiculo.IsSelected = false;
+            /* Id = -1 significa que o veiculo não tem placa */
+            SelectedVeiculo = veiculo;
+        }
+        else
+        {
+            veiculo.Veiculo.Id = 0;
+            SelectedVeiculo = veiculo;
+        }
+
+    }
+}

@@ -9,21 +9,24 @@ using In9Manager.Data;
 using In9Manager.Models;
 using Microsoft.Extensions.Logging.Console;
 using In9Manager.Helpers.HashGenerator;
+using In9Manager.Helpers.Session;
 
 namespace In9Manager.Controllers
 {
     public class UsuariosController : Controller
     {
         private readonly ApplicationContext db;
-
-        public UsuariosController(ApplicationContext context)
+        private readonly ISessao _session;
+        public UsuariosController(ApplicationContext context, ISessao session)
         {
             db = context;
+            _session = session;
         }
 
         // GET: Usuarios
         public async Task<IActionResult> Index()
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             return db.Usuarios != null ?
                         View(await db.Usuarios.ToListAsync()) :
                         Problem("Entity set 'ApplicationContext.Usuarios'  is null.");
@@ -32,6 +35,7 @@ namespace In9Manager.Controllers
         // GET: Usuarios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Usuarios == null)
             {
                 return NotFound();
@@ -50,6 +54,7 @@ namespace In9Manager.Controllers
         // GET: Usuarios/Create
         public IActionResult Create()
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             return View();
         }
 
@@ -78,6 +83,7 @@ namespace In9Manager.Controllers
         // GET: Usuarios/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Usuarios == null)
             {
                 return NotFound();
@@ -129,6 +135,7 @@ namespace In9Manager.Controllers
         // GET: Usuarios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Usuarios == null)
             {
                 return NotFound();

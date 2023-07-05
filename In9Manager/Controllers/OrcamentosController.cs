@@ -7,36 +7,45 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using In9Manager.Data;
 using In9Manager.Models;
+using System.Security.Cryptography.Xml;
+using In9Manager.Helpers.Session;
 
 namespace In9Manager.Controllers
 {
     public class OrcamentosController : Controller
     {
-        private readonly ApplicationContext _context;
+        private readonly ApplicationContext db;
+        private readonly ISessao _session;
 
-        public OrcamentosController(ApplicationContext context)
+        public OrcamentosController(ApplicationContext context, ISessao session)
         {
-            _context = context;
+            db = context;
+            _session = session;
         }
 
         // GET: Orcamentos
         public async Task<IActionResult> Index()
         {
-            var applicationContext = _context.Orcamentos.Include(o => o.Cliente);
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            var applicationContext = db.Orcamentos.Include(o => o.Cliente);
             return View(await applicationContext.ToListAsync());
         }
 
         // GET: Orcamentos/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Orcamentos == null)
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            if (id == null || db.Orcamentos == null)
             {
                 return NotFound();
             }
 
-            var orcamento = await _context.Orcamentos
+            var orcamento = await db.Orcamentos
                 .Include(o => o.Cliente)
+                .Include(x => x.Servicos)
+                .ThenInclude(x => x.Servico)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (orcamento == null)
             {
                 return NotFound();
@@ -48,18 +57,10 @@ namespace In9Manager.Controllers
         // GET: Orcamentos/Create
         public IActionResult Create()
         {
-            IList<object> list = new List<object>();
-            foreach (var item in (Enum.GetValues(typeof(OrcamentoFormaPagamento))))
-            {
-                list.Add(new
-                {
-                    Id = (int)item,
-                    Nome = item
-                });
-            }
-            SelectList forma = new SelectList(list, "Id", "Nome");
-            ViewData["FormaPagamento"] = forma;
-            ViewData["dataCriacao"] = DateTime.Now.ToShortDateString();
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            CarregaFormaPagamento();
+            CarregaStatus();
+            TempData["DataCriacao"] = DateTime.Now.ToShortDateString();
             return View();
         }
 
@@ -68,34 +69,60 @@ namespace In9Manager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Orcamento orcamento, List<int> Servicos, string dataCriacao, string dataValidade)
+        public async Task<IActionResult> Create(Orcamento orcamento, List<int> Servicos, string DataCriacao, string DataValidade,
+            string Placa, int ClienteId, double Desconto, decimal ValorTotal, decimal ValorFinal)
         {
             if (ModelState.IsValid)
             {
-                //_context.Add(orcamento);
-                // _context.SaveChangesAsync();
+                orcamento.PlacaVeiculo = Placa;
+                orcamento.DataCriacao = DateTime.Parse(DataCriacao);
+                orcamento.DataValidade = DateTime.Parse(DataValidade);
+                orcamento.ClienteId = ClienteId;
+                orcamento.Desconto = Desconto;
+                orcamento.ValorFinal = ValorFinal;
+                orcamento.ValorTotal = ValorTotal;
+                db.Orcamentos.Add(orcamento);
+                try
+                {
+                    await db.SaveChangesAsync();
+                    Servicos.ForEach(x =>
+                    {
+                        var servico = new OrcamentoServico();
+                        servico.ServicoId = x;
+                        servico.OrcamentoId = orcamento.Id;
+                        db.OrcamentoServicos.Add(servico);
+                    });
+                    await db.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", "Erro inesperado.");
+                    return View(orcamento);
+                }
                 return RedirectToAction(nameof(Index));
             }
-            TempData["dataCriacao"] = dataCriacao;
-            TempData["dataValidade"] = dataValidade;
-
+            TempData["DataCriacao"] = DataCriacao;
+            TempData["DataValidade"] = DataValidade;
+            CarregaStatus();
+            CarregaFormaPagamento();
             return View(orcamento);
         }
 
         // GET: Orcamentos/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Orcamentos == null)
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            if (id == null || db.Orcamentos == null)
             {
                 return NotFound();
             }
 
-            var orcamento = await _context.Orcamentos.FindAsync(id);
+            var orcamento = await db.Orcamentos.FindAsync(id);
             if (orcamento == null)
             {
                 return NotFound();
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "CPF", orcamento.ClienteId);
+            ViewData["ClienteId"] = new SelectList(db.Clientes, "Id", "CPF", orcamento.ClienteId);
             return View(orcamento);
         }
 
@@ -115,8 +142,8 @@ namespace In9Manager.Controllers
             {
                 try
                 {
-                    _context.Update(orcamento);
-                    await _context.SaveChangesAsync();
+                    db.Update(orcamento);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -131,19 +158,20 @@ namespace In9Manager.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "Id", "CPF", orcamento.ClienteId);
+            ViewData["ClienteId"] = new SelectList(db.Clientes, "Id", "CPF", orcamento.ClienteId);
             return View(orcamento);
         }
 
         // GET: Orcamentos/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Orcamentos == null)
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            if (id == null || db.Orcamentos == null)
             {
                 return NotFound();
             }
 
-            var orcamento = await _context.Orcamentos
+            var orcamento = await db.Orcamentos
                 .Include(o => o.Cliente)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (orcamento == null)
@@ -159,23 +187,52 @@ namespace In9Manager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Orcamentos == null)
+            if (db.Orcamentos == null)
             {
                 return Problem("Entity set 'ApplicationContext.Orcamentos'  is null.");
             }
-            var orcamento = await _context.Orcamentos.FindAsync(id);
+            var orcamento = await db.Orcamentos.FindAsync(id);
             if (orcamento != null)
             {
-                _context.Orcamentos.Remove(orcamento);
+                db.Orcamentos.Remove(orcamento);
             }
             
-            await _context.SaveChangesAsync();
+            await db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool OrcamentoExists(int id)
         {
-          return (_context.Orcamentos?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (db.Orcamentos?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private void CarregaFormaPagamento()
+        {
+            IList<object> list = new List<object>();
+            foreach (var item in (Enum.GetValues(typeof(OrcamentoFormaPagamento))))
+            {
+                list.Add(new
+                {
+                    Id = (int)item,
+                    Nome = item
+                });
+            }
+            SelectList forma = new SelectList(list, "Id", "Nome");
+            ViewData["FormaPagamento"] = forma;
+        }
+        private void CarregaStatus()
+        {
+            IList<object> list = new List<object>();
+            foreach (var item in Enum.GetValues(typeof(OrcamentoStatus)))
+            {
+                list.Add(new
+                {
+                    Id = (int)item,
+                    Nome = item
+                });
+            }
+            SelectList status = new SelectList(list, "Id", "Nome");
+            ViewData["Status"] = status;
         }
     }
 }

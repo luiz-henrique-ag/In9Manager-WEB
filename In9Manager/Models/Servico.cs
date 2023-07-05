@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace In9Manager.Models
 {
@@ -29,7 +31,8 @@ namespace In9Manager.Models
 
         [Required]
         [Range(0, int.MaxValue)]
-        public double Valor { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal Valor { get; set; }
 
         [Display(Name = "Data de Atualização")]
         public DateTime DataAtualizacao { get; set; } = DateTime.Now;

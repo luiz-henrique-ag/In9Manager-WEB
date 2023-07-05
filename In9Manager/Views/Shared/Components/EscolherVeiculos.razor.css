@@ -1,0 +1,11 @@
+﻿
+tbody tr:hover {
+    background-color: #0D6EFF;
+    color: #fff;
+    cursor: pointer;
+}
+
+.active {
+    background-color: #0D6EFF;
+    color: #fff;
+}

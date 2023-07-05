@@ -24,7 +24,7 @@
     <h2 class="display-5 text-center mb-lg-5">Login</h2>
     <div class="container">
         <div class="row">
-            <form class="col-md-4 mx-auto" asp-action="SignIn">
+            <form class="col-md-4 mx-auto" asp-action="SignIn" asp-controller="Auth">
                 <div class="mb-3">
                     <label asp-for="Login" class="form-label">Login</label>
                     <input asp-for="Login" name="login" type="text" class="form-control">
@@ -38,9 +38,6 @@
                 </div>
                 <div class="mb-2">
                     <input type="submit" value="Entrar" class="btn btn-primary w-100">
-                </div>
-                <div class="mb-2">
-                    <a href="">Esqueci a Senha</a>
                 </div>
             </form>
         </div>

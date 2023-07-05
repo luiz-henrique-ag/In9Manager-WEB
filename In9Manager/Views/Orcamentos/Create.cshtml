@@ -16,32 +16,27 @@
             <div class="tab">
                 <button type="button" onclick="openMenu(event, 'Cliente')" class="tablinks" id="defaultOpen">Cliente</button>
                 <button type="button" onclick="openMenu(event, 'Servicos')" class="tablinks">Serviços</button>
-                <button type="button" onclick="openMenu(event, 'Valores')" class="tablinks">Valores</button>
+                <button type="button" onclick="openMenu(event, 'Pagamentos')" class="tablinks">Pagamento</button>
             </div>
         </div>
     </div>
     <div id="Cliente" class="tabcontent">
         <div class="row">
             <div class="col-md-8">
-                <component type="typeof(ClientesTable)" render-mode="ServerPrerendered" />
+                <component type="typeof(EscolherVeiculos)" render-mode="ServerPrerendered" />
                 <div class="mb-3">
                     <label asp-for="DataCriacao" class="control-label"></label>
-                    <input name="dataCriacao" class="form-control data" value="@TempData["dataCriacao"]" />
+                    <input name="DataCriacao" class="form-control data" value="@TempData["DataCriacao"]" />
                     <span asp-validation-for="DataCriacao" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
                     <label asp-for="DataValidade" class="control-label"></label>
-                    <input name="dataValidade" class="form-control data" value="@TempData["dataValidade"]">
+                    <input name="DataValidade" class="form-control data" value="@TempData["DataValidade"]">
                     <span asp-validation-for="DataValidade" class="text-danger"></span>
                 </div>
                 <div class="mb-3">
-                    <label asp-for="PlacaVeiculo" class="control-label"></label>
-                    <input asp-for="PlacaVeiculo" class="form-control" />
-                    <span asp-validation-for="PlacaVeiculo" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
                     <label asp-for="Status" class="control-label"></label>
-                    <input asp-for="Status" class="form-control" />
+                    <select asp-for="Status" asp-items="ViewBag.Status" class="form-select"></select>
                     <span asp-validation-for="Status" class="text-danger"></span>
                 </div>
             </div>
@@ -54,24 +49,9 @@
             </div>
         </div>
     </div>
-    <div id="Valores" class="tabcontent">
+    <div id="Pagamentos" class="tabcontent">
         <div class="row">
             <div class="col-md-8">
-                <div class="mb-3">
-                    <label asp-for="ValorTotal" class="control-label"></label>
-                    <input name="valorTotal" class="form-control preco" />
-                    <span asp-validation-for="ValorTotal" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="Desconto" class="control-label"></label>
-                    <input name="desconto" class="form-control" id="desconto"/>
-                    <span asp-validation-for="Desconto" class="text-danger"></span>
-                </div>
-                <div class="mb-3">
-                    <label asp-for="ValorFinal" class="control-label"></label>
-                    <input name="valorFinal" class="form-control preco" />
-                    <span asp-validation-for="ValorFinal" class="text-danger"></span>
-                </div>
                 <div class="mb-3">
                     <label asp-for="FormaPagamento" class="control-label"></label>
                     <select asp-items="ViewBag.FormaPagamento" asp-for="FormaPagamento" class="form-select"></select>
@@ -82,12 +62,12 @@
                     <input asp-for="NumeroParcelas" class="form-control" value="1"/>
                     <span asp-validation-for="NumeroParcelas" class="text-danger"></span>
                 </div>
+                <div class="mb-3">
+                    <input type="submit" value="Criar" class="btn btn-primary" />
+                </div>
             </div>
         </div>
     </div> 
-    <div class="mb-3">
-        <input type="submit" value="Criar" class="btn btn-primary" />
-    </div>
 </form>
 
 <div>
@@ -124,8 +104,6 @@
                 mask: ['99/99/9999'],
                 keepStatic: true
             });
-        });
-        $(document).ready(function () {
             $('.preco').maskMoney({
                 prefix: 'R$ ',
                 thousands: '.',
@@ -133,8 +111,6 @@
                 allowZero: true,
                 allowNegative: false
             });
-        });
-        $(document).ready(function (){
             $('#desconto').maskMoney({
                 prefix: '',
                 suffix: ' %',
@@ -143,6 +119,11 @@
                 allowZero: true,
                 allowNegative: false
             });
+            $('#valor').change(function () {
+                var valor = $('#valor').val();
+                console.log(valor);
+            });
         });
+        
     </script>
 }

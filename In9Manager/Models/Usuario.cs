@@ -27,6 +27,6 @@ namespace In9Manager.Models
         public string Senha { get; set; }
 
         [Display(Name = "Permissão")]
-        public int Permissao { get; set; } = 2;
+        public int Permissao { get; set; }
     }
 }

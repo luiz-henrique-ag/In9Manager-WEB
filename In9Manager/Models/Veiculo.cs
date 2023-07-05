@@ -26,7 +26,6 @@ namespace In9Manager.Models
         [StringLength(10, ErrorMessage = "Campo não pode ser maior que 10 caracteres.")]
         public string Categoria { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Campo Obrigatório.")]
         [StringLength(7, ErrorMessage = "Campo não pode ser maior que 7 caracteres.")]
         [MinLength(7)]
         public string Placa { get; set; } = string.Empty;

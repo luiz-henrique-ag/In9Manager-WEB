@@ -26,14 +26,14 @@ namespace In9Manager.Controllers
         // GET: Clientes
         public async Task<IActionResult> Index()
         {
-            //if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             return View(await db.Clientes.ToListAsync());  
         }
 
         // GET: Clientes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            //if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Clientes == null)
             {
                 return NotFound();
@@ -56,7 +56,7 @@ namespace In9Manager.Controllers
         // GET: Clientes/Create
         public IActionResult Create()
         {
-            //if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             ClienteViewModel model = new ClienteViewModel();
             TempData["data"] = DateTime.Now.ToShortDateString();
             return View(model);
@@ -92,7 +92,7 @@ namespace In9Manager.Controllers
         // GET: Clientes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            //if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Clientes == null)
             {
                 return NotFound();
@@ -127,8 +127,9 @@ namespace In9Manager.Controllers
                 model.ClienteEndereco.ClienteId = model.Cliente.Id;
                 try
                 {
-                    db.Clientes.Update(model.Cliente);
-                    db.ClienteEnderecos.Update(model.ClienteEndereco);
+                    var cliente = model.Cliente;
+                    db.Update(cliente);
+                    db.Update(model.ClienteEndereco);
                     await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -153,6 +154,7 @@ namespace In9Manager.Controllers
         // GET: Clientes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             if (id == null || db.Clientes == null || db.ClienteEnderecos == null)
             {
                 return NotFound();

@@ -32,12 +32,18 @@ else
             </table>
         </div>
     </div>
+    <div class="row">
+        <div class="col-md-4">
+            <b>Serviços Adicionados</b>
+        </div>
+    </div>
     <div class="col-md">
-        <div class="overflow-auto" style="height: 200px">
-            <table class="table mb-3">
+        <div class="overflow-auto mb-3" style="height: 200px">
+            <table class="table">
                 <thead>
                     <tr>
-                        <th>Serviços Adicionados</th>
+                        <th>Serviço</th>
+                        <th>Valor</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -48,6 +54,7 @@ else
                     {
                         <tr>
                             <td>@item.Nome</td>
+                            <td>R$ @item.Valor</td>
                             <td>
                                 <button class="btn btn-danger" type="button" @onclick="( () => RemoveServico(item))">Remover</button>
                                 <input type="hidden" name="Servicos" value="@item.Id">
@@ -67,28 +74,64 @@ else
             }
             </table>
         </div>
-        <input type="text" @bind=Valor name="Valor" id="preco"/>
+    </div>
+    <div class="row">
+        <div class="col-md">
+            <div class="mb-3">
+                <label class="form-label">Valor Total</label>
+                <input type="text" @bind=ValorTotal name="ValorTotal" id="valor" class="form-control" />
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="mb-3">
+                <label class="form-label">Desconto(%)</label>
+                <input type="text" name="Desconto" class="form-control" @onchange="@( (ChangeEventArgs e) => { AtribuiDesconto(e); })" value="@Desconto" />
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="mb-3">
+                <label class="form-label">Valor Final</label>
+                <input type="text" @bind=ValorFinal name="ValorFinal" class="form-control" readonly>
+            </div>
+        </div>
     </div>
 }   
 @code {
     private List<Servico> ServicosEscolhidos = new List<Servico>();
     private IList<Servico> Servicos { get; set; } = default!;
-    private double Valor { get; set; } = 0.0;
-    protected override void OnInitialized()
+    private decimal ValorTotal { get; set; }
+    private double Desconto { get; set; }
+    private decimal ValorFinal { get; set; }
+    protected override async Task OnInitializedAsync()
     {
-        Servicos = db.Servicos.ToList(); 
+        Servicos = await db.Servicos.ToListAsync(); 
     }
     private void AdicionaServico(Servico servico)
     {
         if (!ServicosEscolhidos.Contains(servico))
         {
-            Valor += servico.Valor;
+            ValorTotal += servico.Valor;
+            ValorFinal = ValorTotal * (decimal)(1 - (Desconto / 100));
             ServicosEscolhidos.Add(servico);
         }
     }
     private void RemoveServico(Servico servico)
     {
+        ValorTotal -= servico.Valor;
+        ValorFinal = ValorTotal * (decimal)(1 - (Desconto / 100));
         ServicosEscolhidos.Remove(servico);
-        Valor -= servico.Valor;
+    }
+    private void AtribuiDesconto(ChangeEventArgs e)
+    {
+        if(e.Value == null || e.Value == "")
+        {
+            Desconto = 0.0;
+            return;
+        }
+        if(e.Value.ToString() != null)
+        {
+            Desconto = double.Parse(e.Value.ToString());
+            ValorFinal = Math.Round(ValorTotal * (decimal)(1 - (Desconto / 100)), 2);
+        }
     }
 }

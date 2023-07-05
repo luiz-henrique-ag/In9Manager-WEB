@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace In9Manager.Models
 {
@@ -19,21 +21,21 @@ namespace In9Manager.Models
 
         [Required(ErrorMessage = "Campo Obrigatório.")]
         [Display(Name = "Data de Criação")]
+        [DataType(DataType.Date)]
         public DateTime DataCriacao { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "Campo Obrigatório.")]
         [Display(Name = "Data de Validade")]
+        [DataType(DataType.Date)]
         public DateTime DataValidade { get; set; } = DateTime.Now.AddDays(7);
 
         [Required(ErrorMessage = "Campo Obrigatório.")]
         [Display(Name = "Valor Total")]
-        [Range(0, 100.0)]
-        public double ValorTotal { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal ValorTotal { get; set; }
 
-        [Required(ErrorMessage = "Campo Obrigatório.")]
         [Display(Name = "Placa do Veículo")]
-        [StringLength(7)]
-        [MinLength(7)]
+        [StringLength(50, ErrorMessage = "Identificador não pode ser maior que 50 caracteres.")]
         public string PlacaVeiculo { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Campo Obrigatório.")]
@@ -42,12 +44,11 @@ namespace In9Manager.Models
 
         [Required(ErrorMessage = "Campo Obrigatório.")]
         [Display(Name = "Valor Final")]
-        [Range(0, 100.0)]
-        public double ValorFinal { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal ValorFinal { get; set; }
 
         [Required(ErrorMessage = "Campo Obrigatório.")]
-        [StringLength(1)]
-        public string Status { get; set; } = "I";
+        public int Status { get; set; }
 
         [Required(ErrorMessage = "Campo Obrigatório.")]
         [Display(Name = "Forma de Pagamento")]
@@ -60,7 +61,7 @@ namespace In9Manager.Models
 
         public void SetarValorFinal()
         {
-            ValorFinal = ValorTotal*(1 + (Desconto/100));
+            ValorFinal = ValorTotal*(decimal)(1 + (Desconto/100));
         }
 
     }

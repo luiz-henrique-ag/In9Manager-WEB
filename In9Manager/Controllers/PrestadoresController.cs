@@ -7,35 +7,39 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using In9Manager.Data;
 using In9Manager.Models;
+using In9Manager.Helpers.Session;
 
 namespace In9Manager.Controllers
 {
     public class PrestadoresController : Controller
     {
-        private readonly ApplicationContext _context;
-
-        public PrestadoresController(ApplicationContext context)
+        private readonly ApplicationContext db;
+        private readonly ISessao _session;
+        public PrestadoresController(ApplicationContext context, ISessao session)
         {
-            _context = context;
+            db = context;
+            _session = session;
         }
 
         // GET: Prestadores
         public async Task<IActionResult> Index()
         {
-              return _context.Prestadores != null ? 
-                          View(await _context.Prestadores.ToListAsync()) :
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            return db.Prestadores != null ? 
+                          View(await db.Prestadores.ToListAsync()) :
                           Problem("Entity set 'ApplicationContext.Prestadores'  is null.");
         }
 
         // GET: Prestadores/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Prestadores == null)
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            if (id == null || db.Prestadores == null)
             {
                 return NotFound();
             }
 
-            var prestador = await _context.Prestadores
+            var prestador = await db.Prestadores
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (prestador == null)
             {
@@ -48,6 +52,7 @@ namespace In9Manager.Controllers
         // GET: Prestadores/Create
         public IActionResult Create()
         {
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
             return View();
         }
 
@@ -60,8 +65,8 @@ namespace In9Manager.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(prestador);
-                await _context.SaveChangesAsync();
+                db.Add(prestador);
+                await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(prestador);
@@ -70,12 +75,13 @@ namespace In9Manager.Controllers
         // GET: Prestadores/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Prestadores == null)
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            if (id == null || db.Prestadores == null)
             {
                 return NotFound();
             }
 
-            var prestador = await _context.Prestadores.FindAsync(id);
+            var prestador = await db.Prestadores.FindAsync(id);
             if (prestador == null)
             {
                 return NotFound();
@@ -99,8 +105,8 @@ namespace In9Manager.Controllers
             {
                 try
                 {
-                    _context.Update(prestador);
-                    await _context.SaveChangesAsync();
+                    db.Update(prestador);
+                    await db.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -121,12 +127,13 @@ namespace In9Manager.Controllers
         // GET: Prestadores/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Prestadores == null)
+            if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            if (id == null || db.Prestadores == null)
             {
                 return NotFound();
             }
 
-            var prestador = await _context.Prestadores
+            var prestador = await db.Prestadores
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (prestador == null)
             {
@@ -141,23 +148,23 @@ namespace In9Manager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Prestadores == null)
+            if (db.Prestadores == null)
             {
                 return Problem("Entity set 'ApplicationContext.Prestadores'  is null.");
             }
-            var prestador = await _context.Prestadores.FindAsync(id);
+            var prestador = await db.Prestadores.FindAsync(id);
             if (prestador != null)
             {
-                _context.Prestadores.Remove(prestador);
+                db.Prestadores.Remove(prestador);
             }
             
-            await _context.SaveChangesAsync();
+            await db.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool PrestadorExists(int id)
         {
-          return (_context.Prestadores?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (db.Prestadores?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
