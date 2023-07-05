@@ -2,15 +2,6 @@
 
 @{
     ViewData["Title"] = "Cadastrar";
-    IList<object> list = new List<object>();
-    foreach (var item in (Enum.GetValues(typeof(TipoMaodeObra))) ){
-        list.Add(new
-        {
-            Id = (int)item,
-            Nome = item
-        });
-    }
-    SelectList tipo = new SelectList(list, "Id", "Nome");
 }
 
 <h1>Novo</h1>
@@ -38,7 +29,7 @@
             </div>
             <div class="mb-3">
                 <label asp-for="TipoMaoDeObra" class="control-label"></label>
-                <select asp-for="TipoMaoDeObra" asp-items="tipo" class="form-select"></select>
+                <select asp-for="TipoMaoDeObra" asp-items="ViewBag.MaoObra" class="form-select"></select>
             </div>
             <div class="mb-3">
                 <label asp-for="Valor" class="control-label"></label>

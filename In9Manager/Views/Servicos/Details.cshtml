@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "Detalhes";
+    var MaoObra = new Dictionary<int, object>();
+    foreach (var item in Enum.GetValues(typeof(TipoMaodeObra)))
+    {
+        MaoObra.Add((int)item, item);
+    }
 }
 
 <h1>Detalhes</h1>
@@ -32,7 +37,7 @@
             @Html.DisplayNameFor(model => model.TipoMaoDeObra)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TipoMaoDeObra)
+            @MaoObra[Model.TipoMaoDeObra]
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Valor)

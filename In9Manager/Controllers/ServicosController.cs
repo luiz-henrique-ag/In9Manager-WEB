@@ -53,6 +53,7 @@ namespace In9Manager.Controllers
         public IActionResult Create()
         {
             if (_session.GetSession() == null) return RedirectToAction(nameof(AuthController.Login), "Auth");
+            CarregaMaoObra();
             TempData["Preco"] = "0,0";
             return View();
         }
@@ -72,7 +73,7 @@ namespace In9Manager.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            
+            CarregaMaoObra();
             TempData["Preco"] = preco;
             return View(servico);
         }
@@ -91,6 +92,7 @@ namespace In9Manager.Controllers
             {
                 return NotFound();
             }
+            CarregaMaoObra();
             return View(servico);
         }
 
@@ -126,6 +128,7 @@ namespace In9Manager.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            CarregaMaoObra();
             return View(servico);
         }
 
@@ -170,6 +173,20 @@ namespace In9Manager.Controllers
         private bool ServicoExists(int id)
         {
           return (db.Servicos?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+        private void CarregaMaoObra()
+        {
+            IList<object> list = new List<object>();
+            foreach (var item in (Enum.GetValues(typeof(TipoMaodeObra))))
+            {
+                list.Add(new
+                {
+                    Id = (int)item,
+                    Nome = item
+                });
+            }
+            SelectList tipo = new SelectList(list, "Id", "Nome");
+            ViewData["MaoObra"] = tipo;
         }
     }
 }
